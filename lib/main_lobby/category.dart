@@ -23,13 +23,29 @@ class _CategoryState extends State<Category> {
     innerPadding = MediaQuery.of(context).size.width / 10;
   }
 
+  void resetIndex() {
+    for (Map cate in widget.categories) {
+      cate["index"] -= focus;
+    }
+    focus = 0;
+    setState(() {});
+  }
+
   void autoScroll() async {
     while (true) {
       await Future.delayed(Duration(seconds: 3));
       focus++;
-      if (focus >= widget.categories.length) focus = 0;
+      if (focus >= widget.categories.length) resetIndex();
       setState(() {});
     }
+  }
+
+  int maxIndex() {
+    int max = widget.categories[0]["index"];
+    for (Map cate in widget.categories) {
+      if (max < cate["index"]) max = cate["index"];
+    }
+    return max;
   }
 
   double getCenterPos() {
@@ -43,14 +59,31 @@ class _CategoryState extends State<Category> {
     double pos = screenCount == 0
         ? centerPos
         : centerPos + (tileWidth + gap) * (cate["index"] - focus);
+    int sleep = 700 + (cate["index"] * 40).toInt() as int;
     return AnimatedPositioned(
+      onEnd: () {
+        if (pos < -(tileWidth * 2)) {
+          setState(() {
+            cate["index"] = maxIndex() + 1;
+            cate["ani"] = false;
+          });
+        } else if (!cate["ani"]) {
+          setState(() {
+            cate["ani"] = true;
+          });
+        }
+      },
       curve: Curves.easeInBack,
-      duration: Duration(milliseconds: 700 + (cate["index"] * 40).toInt() as int),
+      duration: Duration(milliseconds: sleep),
       left: pos,
-      child: CategoryTile(
-        cate,
-        width: tileWidth,
-        height: tileHeight,
+      child: AnimatedOpacity(
+        duration: Duration(milliseconds: 10),
+        opacity: cate["ani"] ? 1 : 0,
+        child: CategoryTile(
+          cate,
+          width: tileWidth,
+          height: tileHeight,
+        ),
       ),
     );
   }
@@ -73,6 +106,7 @@ class _CategoryState extends State<Category> {
     }
     for (MapEntry cate in widget.categories.asMap().entries) {
       cate.value["index"] = cate.key;
+      cate.value["ani"] = true;
     }
     focus = widget.categories.length ~/ 2;
     autoScroll();
@@ -102,19 +136,19 @@ class CategoryTile extends StatefulWidget {
 }
 
 class _CategoryTileState extends State<CategoryTile> {
-  bool onDetail = true;
+  bool onDetail = false;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (var event) {
         setState(() {
-          // onDetail = true;
+          onDetail = true;
         });
       },
       onExit: (var event) {
         setState(() {
-          // onDetail = false;
+          onDetail = false;
         });
       },
       child: GestureDetector(
