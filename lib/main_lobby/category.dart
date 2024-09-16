@@ -33,7 +33,7 @@ class _CategoryState extends State<Category> {
 
   void autoScroll() async {
     while (true) {
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
       focus++;
       if (focus >= widget.categories.length) resetIndex();
       setState(() {});
@@ -77,12 +77,13 @@ class _CategoryState extends State<Category> {
       duration: Duration(milliseconds: sleep),
       left: pos,
       child: AnimatedOpacity(
-        duration: Duration(milliseconds: 10),
+        duration: const Duration(milliseconds: 10),
         opacity: cate["ani"] ? 1 : 0,
         child: CategoryTile(
           cate,
           width: tileWidth,
           height: tileHeight,
+          detail: pos == centerPos,
         ),
       ),
     );
@@ -125,9 +126,9 @@ class _CategoryState extends State<Category> {
 
 class CategoryTile extends StatefulWidget {
   const CategoryTile(this.data,
-      {super.key, this.width = 300, this.height = 400, this.detail});
+      {super.key, this.width = 300, this.height = 400, this.detail = false});
   final Map data;
-  final bool? detail;
+  final bool detail;
   final double width;
   final double height;
 
@@ -136,20 +137,55 @@ class CategoryTile extends StatefulWidget {
 }
 
 class _CategoryTileState extends State<CategoryTile> {
+  bool center = false;
   bool onDetail = false;
+  late String title;
+  late String description;
+
+  void getDetail() async {
+    while (true) {
+      await Future.delayed(const Duration(milliseconds: 10));
+      if (widget.detail) {
+        center = true;
+        await Future.delayed(const Duration(milliseconds: 700));
+        setState(() {
+          onDetail = widget.detail;
+        });
+      } else {
+        setState(() {
+          center = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    title =
+        widget.data.keys.toList().contains("title") ? widget.data["title"] : "";
+    description = widget.data.keys.toList().contains("description")
+        ? widget.data["description"]
+        : "";
+    getDetail();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (var event) {
-        setState(() {
-          onDetail = true;
-        });
+        if (!center) {
+          setState(() {
+            onDetail = true;
+          });
+        }
       },
       onExit: (var event) {
-        setState(() {
-          onDetail = false;
-        });
+        if (!center) {
+          setState(() {
+            onDetail = false;
+          });
+        }
       },
       child: GestureDetector(
         onTap: () {
@@ -171,15 +207,33 @@ class _CategoryTileState extends State<CategoryTile> {
                 borderRadius: BorderRadius.circular(15),
               ),
               height: widget.width,
-              child: Column(
-                children: [
-                  Text(widget.data.keys.toList().contains("title")
-                      ? widget.data["title"]
-                      : ""),
-                  Text(widget.data.keys.toList().contains("description")
-                      ? widget.data["description"]
-                      : ""),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      title,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      description,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

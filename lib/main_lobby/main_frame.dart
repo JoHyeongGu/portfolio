@@ -12,33 +12,48 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> {
   final List<Map> categories = [
     {
-      "title": "0테스트 카테고리",
-      "description": "카테고리가 화면에 보이는 부분을 테스트하기 위한 테스트 데이터 입니다.",
+      "title": "Hobby",
+      "description": "음악과 그림 등 취미활동들을 저장하는 곳",
       "path": "/test/",
     },
     {
-      "title": "1테스트 카테고리",
-      "description": "카테고리가 화면에 보이는 부분을 테스트하기 위한 테스트 데이터 입니다.",
+      "title": "Python",
+      "description": "Python 언어의 기초 문법을 정리하고 Python을 활용하여 만든 알고리즘들을 탐구하는 곳",
       "path": "/test/",
     },
     {
-      "title": "2테스트 카테고리",
-      "description": "카테고리가 화면에 보이는 부분을 테스트하기 위한 테스트 데이터 입니다.",
+      "title": "Flutter",
+      "description": "Dart 언어의 기초 문법을 정리하고\nFlutter를 활용하여 만든 Web&App을 저장하는 곳",
       "path": "/test/",
     },
     {
-      "title": "3테스트 카테고리",
-      "description": "카테고리가 화면에 보이는 부분을 테스트하기 위한 테스트 데이터 입니다.",
+      "title": "Server Deploy",
+      "description": "서버와 관련된 기초 지식들을 정리하고 서버\n배포 과정 중 경함한 내용들을 저장하는 곳",
       "path": "/test/",
     },
     {
-      "title": "4테스트 카테고리",
-      "description": "카테고리가 화면에 보이는 부분을 테스트하기 위한 테스트 데이터 입니다.",
+      "title": "Unity",
+      "description": "Unity tool을 이용하여 게임을 만들며 생긴 이슈들을 정리하고 게임 개발의 기초를 다지는 곳",
       "path": "/test/",
     },
     {
-      "title": "5테스트 카테고리",
-      "description": "카테고리가 화면에 보이는 부분을 테스트하기 위한 테스트 데이터 입니다.",
+      "title": "3D Modeling",
+      "description": "3D 캐릭터를 모델링하는 방법을 탐구하고 과정 중 생긴 이슈들을 저장하는 곳",
+      "path": "/test/",
+    },
+    {
+      "title": "Idea Pictures",
+      "description": "머릿 속에 떠오르는 아이디어들을 저장하는 곳",
+      "path": "/test/",
+    },
+    {
+      "title": "Windows",
+      "description": "윈도우 OS 이용 중 발생한 이슈들을 다뤘던\n경험들을 저장하는 곳",
+      "path": "/test/",
+    },
+    {
+      "title": "Crawling",
+      "description": "웹 상의 데이터를 가져오는 프로세스를\n구성하며 생긴 정보들을 저장하는 곳",
       "path": "/test/",
     },
   ];
@@ -52,38 +67,8 @@ class _MainFrameState extends State<MainFrame> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const TitleLogo(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 50),
           Category(categories, outPadding: contentPadding),
-          const PostList(),
-        ],
-      ),
-    );
-  }
-}
-
-class PostList extends StatelessWidget {
-  const PostList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 40),
-      child: Column(
-        children: [
-          Container(
-            width: 300,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              border: const Border(
-                top: BorderSide(color: Colors.black, width: 2),
-                left: BorderSide(color: Colors.black, width: 2),
-                right: BorderSide(color: Colors.black, width: 2),
-                bottom: BorderSide(color: Colors.black, width: 2),
-              ),
-            ),
-          )
         ],
       ),
     );

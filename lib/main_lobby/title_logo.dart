@@ -9,11 +9,11 @@ class TitleLogo extends StatelessWidget {
       children: [
         Text(
           "JoNdea",
-          style: TextStyle(fontSize: 40),
+          style: TextStyle(fontSize: 60),
         ),
         Text(
           "생각을 저장하는 나만의 창고",
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 15),
         ),
       ],
     );
