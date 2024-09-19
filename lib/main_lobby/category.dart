@@ -16,10 +16,9 @@ class _CategoryState extends State<Category> {
   int screenCount = 0;
   double gap = 40;
   late int focus;
-  late int prevFocus;
 
   void restartAutoScroll() {
-    if (focus != prevFocus) focus = prevFocus;
+    resetIndex();
     setState(() {
       stopAutoScroll = false;
     });
@@ -48,12 +47,10 @@ class _CategoryState extends State<Category> {
 
   void autoScroll() async {
     while (mounted) {
-      if (!stopAutoScroll) await Future.delayed(const Duration(seconds: 3));
       if (!stopAutoScroll) focus++;
-      if (!stopAutoScroll) prevFocus = focus;
       if (!stopAutoScroll && focus >= widget.categories.length) resetIndex();
-      if (!stopAutoScroll && focus != prevFocus) focus = prevFocus;
       if (!stopAutoScroll) setState(() {});
+      if (!stopAutoScroll) await Future.delayed(const Duration(seconds: 3));
       if (stopAutoScroll) break;
     }
   }
@@ -128,7 +125,6 @@ class _CategoryState extends State<Category> {
       cate.value["ani"] = true;
     }
     focus = widget.categories.length ~/ 2;
-    prevFocus = focus;
     autoScroll();
   }
 
@@ -304,76 +300,28 @@ class CateSummeryLine extends StatefulWidget {
 class _CateSummeryLineState extends State<CateSummeryLine> {
   String focusTitle = "";
 
-  Widget pin = Container(
-    height: 5,
-    width: 5,
-    margin: const EdgeInsets.symmetric(horizontal: 12),
-    decoration: BoxDecoration(
-      color: Colors.grey,
-      borderRadius: BorderRadius.circular(20),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.5),
-          blurRadius: 1,
-          spreadRadius: 1,
-        )
-      ],
-    ),
-  );
+  void click(Map cate) {
+    if (focusTitle != cate["title"]) {
+      setState(() {
+        focusTitle = cate["title"];
+      });
+      widget.enter(cate["index"]);
+    } else {
+      setState(() {
+        focusTitle = "";
+      });
+      widget.exit();
+    }
+  }
 
-  Widget sortLine = Padding(
-    padding: const EdgeInsets.only(top: 10),
+  Widget sortLine = Align(
+    alignment: Alignment.center,
     child: Container(
       color: Colors.brown,
       height: 2,
       width: double.infinity,
     ),
   );
-
-  Widget category(Map cate, {bool padding = true}) => MouseRegion(
-        onEnter: (event) {
-          widget.enter(cate["index"]);
-          setState(() {
-            focusTitle = cate["title"];
-          });
-        },
-        onExit: (event) {
-          widget.exit();
-          setState(() {
-            focusTitle = "";
-          });
-        },
-        child: GestureDetector(
-          onTapDown: (details) => widget.enter(cate["index"]),
-          onTapUp: (details) => widget.exit(),
-          child: Container(
-            margin: EdgeInsets.only(right: padding ? 30 : 0),
-            decoration: BoxDecoration(
-              color: Colors.grey[400],
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  spreadRadius: 0.7,
-                  blurRadius: 4,
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                pin,
-                Text(
-                  cate["title"],
-                  style: TextStyle(
-                    fontSize: focusTitle == cate["title"] ? 18 : 15,
-                  ),
-                ),
-                pin,
-              ],
-            ),
-          ),
-        ),
-      );
 
   @override
   void initState() {
@@ -392,12 +340,98 @@ class _CateSummeryLineState extends State<CateSummeryLine> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: widget.categories
-                  .map((Map cate) =>
-                      category(cate, padding: cate["padding"] ?? true))
+                  .map(
+                    (Map cate) => SummaryTile(
+                      cate,
+                      click: click,
+                      focusTitle: focusTitle,
+                      padding: cate["padding"] ?? true,
+                    ),
+                  )
                   .toList(),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SummaryTile extends StatefulWidget {
+  final Map cate;
+  final bool padding;
+  final String focusTitle;
+  final void Function(Map) click;
+
+  const SummaryTile(
+    this.cate, {
+    super.key,
+    required this.padding,
+    required this.click,
+    required this.focusTitle,
+  });
+
+  @override
+  State<SummaryTile> createState() => _SummaryTileState();
+}
+
+class _SummaryTileState extends State<SummaryTile> {
+  bool focus = false;
+
+  Widget pin() => Container(
+        height: 5,
+        width: 5,
+        margin: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: focus ? Colors.grey[400] : Colors.grey,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 1,
+              spreadRadius: 1,
+            )
+          ],
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    focus = widget.focusTitle == widget.cate["title"];
+    return GestureDetector(
+      onTap: () {
+        widget.click(widget.cate);
+      },
+      child: SizedBox(
+        height: 30,
+        child: Container(
+          margin: EdgeInsets.only(right: widget.padding ? 30 : 0),
+          decoration: BoxDecoration(
+            color:
+                focus ? Color.fromRGBO(178, 155, 129, 1.0) : Colors.grey[400],
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 0.7,
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              pin(),
+              Text(
+                widget.cate["title"],
+                style: TextStyle(
+                  fontWeight: focus ? FontWeight.bold : FontWeight.normal,
+                  fontSize: focus ? 16 : 15,
+                ),
+              ),
+              pin(),
+            ],
+          ),
+        ),
       ),
     );
   }
