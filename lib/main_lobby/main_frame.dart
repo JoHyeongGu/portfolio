@@ -57,19 +57,22 @@ class _MainFrameState extends State<MainFrame> {
       "path": "/test/",
     },
   ];
-  double contentPadding = 10;
+  Size contentPadding = const Size(100, 45);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(contentPadding),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const TitleLogo(),
-          const SizedBox(height: 50),
-          Category(categories, outPadding: contentPadding),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: contentPadding.width,
+          vertical: contentPadding.height,
+        ),
+        child: Column(
+          children: [
+            const TitleLogo(),
+            Category(categories, outPadding: contentPadding.width),
+          ],
+        ),
       ),
     );
   }

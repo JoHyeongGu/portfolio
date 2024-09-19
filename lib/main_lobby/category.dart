@@ -10,17 +10,14 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
+  Size size = const Size(300, 400);
   double gap = 40;
-  double tileWidth = 300;
-  double tileHeight = 400;
-  double innerPadding = 0;
   int screenCount = 0;
   late int focus;
 
   void initWithSize() {
-    screenCount = (MediaQuery.of(context).size.width / tileWidth).toInt();
+    screenCount = (MediaQuery.of(context).size.width / size.width).toInt();
     if (screenCount % 2 == 0) screenCount--;
-    innerPadding = MediaQuery.of(context).size.width / 10;
   }
 
   void resetIndex() {
@@ -32,7 +29,7 @@ class _CategoryState extends State<Category> {
   }
 
   void autoScroll() async {
-    while (true) {
+    while (mounted) {
       await Future.delayed(const Duration(seconds: 3));
       focus++;
       if (focus >= widget.categories.length) resetIndex();
@@ -50,19 +47,19 @@ class _CategoryState extends State<Category> {
 
   double getCenterPos() {
     return (MediaQuery.of(context).size.width / 2) -
-        (tileWidth / 2) -
-        (widget.outPadding + innerPadding);
+        (size.width / 2) -
+        widget.outPadding;
   }
 
   Widget animatedTile(Map cate) {
     double centerPos = getCenterPos();
     double pos = screenCount == 0
         ? centerPos
-        : centerPos + (tileWidth + gap) * (cate["index"] - focus);
+        : centerPos + (size.width + gap) * (cate["index"] - focus);
     int sleep = 700 + (cate["index"] * 40).toInt() as int;
     return AnimatedPositioned(
       onEnd: () {
-        if (pos < -(tileWidth * 2)) {
+        if (pos < -(size.width * 2)) {
           setState(() {
             cate["index"] = maxIndex() + 1;
             cate["ani"] = false;
@@ -81,8 +78,7 @@ class _CategoryState extends State<Category> {
         opacity: cate["ani"] ? 1 : 0,
         child: CategoryTile(
           cate,
-          width: tileWidth,
-          height: tileHeight,
+          size: size,
           detail: pos == centerPos,
         ),
       ),
@@ -90,11 +86,40 @@ class _CategoryState extends State<Category> {
   }
 
   Widget animatedCategories() {
-    return AnimatedPadding(
+    return AnimatedContainer(
+      height: size.height,
       duration: const Duration(milliseconds: 300),
-      padding: EdgeInsets.symmetric(horizontal: innerPadding),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Stack(
         children: widget.categories.map((cate) => animatedTile(cate)).toList(),
+      ),
+    );
+  }
+
+  Widget textCategoryList() {
+    widget.categories.last["padding"] = false;
+    Widget category(String title, {bool padding = true}) => Container(
+          color: Colors.green,
+          margin: EdgeInsets.only(right: padding ? 30 : 0),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Text("$title: $padding"),
+        );
+    return Container(
+      color: Colors.green[200],
+      width: double.infinity,
+      padding:  EdgeInsets.symmetric(horizontal: 100),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          color: Colors.red,
+          // width: MediaQuery.of(context).size.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: widget.categories
+                .map((Map c) => category(c["title"], padding: c["padding"] ?? true))
+                .toList(),
+          ),
+        ),
       ),
     );
   }
@@ -116,21 +141,29 @@ class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     initWithSize();
-    return SizedBox(
-      width: double.infinity,
-      height: tileHeight,
-      child: animatedCategories(),
+    return Column(
+      children: [
+        textCategoryList(),
+        animatedCategories(),
+        // Container(
+        //   height: 2,
+        //   margin: const EdgeInsets.symmetric(vertical: 10),
+        //   decoration: BoxDecoration(
+        //     color: Colors.black,
+        //     borderRadius: BorderRadius.circular(15),
+        //   ),
+        // ),
+      ],
     );
   }
 }
 
 class CategoryTile extends StatefulWidget {
   const CategoryTile(this.data,
-      {super.key, this.width = 300, this.height = 400, this.detail = false});
+      {super.key, this.size = const Size(300, 400), this.detail = false});
+  final Size size;
   final Map data;
   final bool detail;
-  final double width;
-  final double height;
 
   @override
   State<CategoryTile> createState() => _CategoryTileState();
@@ -139,11 +172,69 @@ class CategoryTile extends StatefulWidget {
 class _CategoryTileState extends State<CategoryTile> {
   bool center = false;
   bool onDetail = false;
-  late String title;
-  late String description;
+
+  Widget frontTitle() {
+    return Positioned(
+      right: 20,
+      bottom: 25,
+      child: Opacity(
+        opacity: 0.6,
+        child: Text(
+          widget.data["title"],
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget detailCover() {
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      opacity: onDetail ? 1 : 0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        width: widget.size.width,
+        height: widget.size.height,
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                widget.data["title"],
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Text(
+                widget.data["description"],
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   void getDetail() async {
-    while (true) {
+    while (mounted) {
       await Future.delayed(const Duration(milliseconds: 10));
       if (widget.detail) {
         center = true;
@@ -162,11 +253,6 @@ class _CategoryTileState extends State<CategoryTile> {
   @override
   void initState() {
     super.initState();
-    title =
-        widget.data.keys.toList().contains("title") ? widget.data["title"] : "";
-    description = widget.data.keys.toList().contains("description")
-        ? widget.data["description"]
-        : "";
     getDetail();
   }
 
@@ -192,50 +278,17 @@ class _CategoryTileState extends State<CategoryTile> {
           print(widget.data["path"]);
         },
         child: Container(
-          width: widget.width,
-          height: widget.height,
+          width: widget.size.width,
+          height: widget.size.height,
           decoration: BoxDecoration(
             color: Colors.grey,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: onDetail ? 1 : 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              height: widget.width,
-              child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      title,
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black45,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      description,
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black45,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          child: Stack(
+            children: [
+              frontTitle(),
+              detailCover(),
+            ],
           ),
         ),
       ),

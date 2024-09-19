@@ -5,17 +5,22 @@ class TitleLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text(
-          "JoNdea",
-          style: TextStyle(fontSize: 60),
+    return const Padding(
+      padding: EdgeInsets.only(bottom: 20),
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+              "JoNdea",
+              style: TextStyle(fontSize: 60),
+            ),
+            Text(
+              "생각을 저장하는 나만의 창고",
+              style: TextStyle(fontSize: 15),
+            ),
+          ],
         ),
-        Text(
-          "생각을 저장하는 나만의 창고",
-          style: TextStyle(fontSize: 15),
-        ),
-      ],
+      ),
     );
   }
 }
