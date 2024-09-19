@@ -6,7 +6,7 @@ class TitleLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(bottom: 20),
+      padding: EdgeInsets.only(bottom: 45),
       child: Center(
         child: Column(
           children: [

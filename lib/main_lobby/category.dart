@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Category extends StatefulWidget {
-  const Category(this.categories, {super.key, this.outPadding = 0});
   final List<Map> categories;
   final double outPadding;
+
+  const Category(this.categories, {super.key, this.outPadding = 0});
 
   @override
   State<Category> createState() => _CategoryState();
@@ -11,9 +12,26 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category> {
   Size size = const Size(300, 400);
-  double gap = 40;
+  bool stopAutoScroll = false;
   int screenCount = 0;
+  double gap = 40;
   late int focus;
+  late int prevFocus;
+
+  void restartAutoScroll() {
+    if (focus != prevFocus) focus = prevFocus;
+    setState(() {
+      stopAutoScroll = false;
+    });
+    autoScroll();
+  }
+
+  void setFixedFocus(int _focus) async {
+    setState(() {
+      focus = _focus;
+      stopAutoScroll = true;
+    });
+  }
 
   void initWithSize() {
     screenCount = (MediaQuery.of(context).size.width / size.width).toInt();
@@ -30,10 +48,13 @@ class _CategoryState extends State<Category> {
 
   void autoScroll() async {
     while (mounted) {
-      await Future.delayed(const Duration(seconds: 3));
-      focus++;
-      if (focus >= widget.categories.length) resetIndex();
-      setState(() {});
+      if (!stopAutoScroll) await Future.delayed(const Duration(seconds: 3));
+      if (!stopAutoScroll) focus++;
+      if (!stopAutoScroll) prevFocus = focus;
+      if (!stopAutoScroll && focus >= widget.categories.length) resetIndex();
+      if (!stopAutoScroll && focus != prevFocus) focus = prevFocus;
+      if (!stopAutoScroll) setState(() {});
+      if (stopAutoScroll) break;
     }
   }
 
@@ -96,34 +117,6 @@ class _CategoryState extends State<Category> {
     );
   }
 
-  Widget textCategoryList() {
-    widget.categories.last["padding"] = false;
-    Widget category(String title, {bool padding = true}) => Container(
-          color: Colors.green,
-          margin: EdgeInsets.only(right: padding ? 30 : 0),
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Text("$title: $padding"),
-        );
-    return Container(
-      color: Colors.green[200],
-      width: double.infinity,
-      padding:  EdgeInsets.symmetric(horizontal: 100),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Container(
-          color: Colors.red,
-          // width: MediaQuery.of(context).size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.categories
-                .map((Map c) => category(c["title"], padding: c["padding"] ?? true))
-                .toList(),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -135,6 +128,7 @@ class _CategoryState extends State<Category> {
       cate.value["ani"] = true;
     }
     focus = widget.categories.length ~/ 2;
+    prevFocus = focus;
     autoScroll();
   }
 
@@ -143,16 +137,12 @@ class _CategoryState extends State<Category> {
     initWithSize();
     return Column(
       children: [
-        textCategoryList(),
+        CateSummeryLine(
+          widget.categories,
+          enter: setFixedFocus,
+          exit: restartAutoScroll,
+        ),
         animatedCategories(),
-        // Container(
-        //   height: 2,
-        //   margin: const EdgeInsets.symmetric(vertical: 10),
-        //   decoration: BoxDecoration(
-        //     color: Colors.black,
-        //     borderRadius: BorderRadius.circular(15),
-        //   ),
-        // ),
       ],
     );
   }
@@ -250,6 +240,14 @@ class _CategoryTileState extends State<CategoryTile> {
     }
   }
 
+  void setDetail(bool turn) {
+    if (!center && onDetail != turn) {
+      setState(() {
+        onDetail = turn;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -259,24 +257,15 @@ class _CategoryTileState extends State<CategoryTile> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (var event) {
-        if (!center) {
-          setState(() {
-            onDetail = true;
-          });
-        }
-      },
-      onExit: (var event) {
-        if (!center) {
-          setState(() {
-            onDetail = false;
-          });
-        }
-      },
+      cursor: SystemMouseCursors.click,
+      onEnter: (event) => setDetail(true),
+      onExit: (event) => setDetail(false),
       child: GestureDetector(
-        onTap: () {
+        onTapUp: (details) {
+          setDetail(false);
           print(widget.data["path"]);
         },
+        onTapDown: (details) => setDetail(true),
         child: Container(
           width: widget.size.width,
           height: widget.size.height,
@@ -291,6 +280,124 @@ class _CategoryTileState extends State<CategoryTile> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CateSummeryLine extends StatefulWidget {
+  final List<Map> categories;
+  final void Function(int) enter;
+  final void Function() exit;
+
+  const CateSummeryLine(
+    this.categories, {
+    super.key,
+    required this.enter,
+    required this.exit,
+  });
+
+  @override
+  State<CateSummeryLine> createState() => _CateSummeryLineState();
+}
+
+class _CateSummeryLineState extends State<CateSummeryLine> {
+  String focusTitle = "";
+
+  Widget pin = Container(
+    height: 5,
+    width: 5,
+    margin: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(
+      color: Colors.grey,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.5),
+          blurRadius: 1,
+          spreadRadius: 1,
+        )
+      ],
+    ),
+  );
+
+  Widget sortLine = Padding(
+    padding: const EdgeInsets.only(top: 10),
+    child: Container(
+      color: Colors.brown,
+      height: 2,
+      width: double.infinity,
+    ),
+  );
+
+  Widget category(Map cate, {bool padding = true}) => MouseRegion(
+        onEnter: (event) {
+          widget.enter(cate["index"]);
+          setState(() {
+            focusTitle = cate["title"];
+          });
+        },
+        onExit: (event) {
+          widget.exit();
+          setState(() {
+            focusTitle = "";
+          });
+        },
+        child: GestureDetector(
+          onTapDown: (details) => widget.enter(cate["index"]),
+          onTapUp: (details) => widget.exit(),
+          child: Container(
+            margin: EdgeInsets.only(right: padding ? 30 : 0),
+            decoration: BoxDecoration(
+              color: Colors.grey[400],
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 0.7,
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                pin,
+                Text(
+                  cate["title"],
+                  style: TextStyle(
+                    fontSize: focusTitle == cate["title"] ? 18 : 15,
+                  ),
+                ),
+                pin,
+              ],
+            ),
+          ),
+        ),
+      );
+
+  @override
+  void initState() {
+    super.initState();
+    widget.categories.last["padding"] = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      child: Stack(
+        children: [
+          sortLine,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: widget.categories
+                  .map((Map cate) =>
+                      category(cate, padding: cate["padding"] ?? true))
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
