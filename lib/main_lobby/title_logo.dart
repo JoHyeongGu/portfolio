@@ -4,7 +4,7 @@ import 'dart:html';
 class TitleLogo extends StatelessWidget {
   TitleLogo({super.key});
 
-  Widget thinkingHat = Image.asset("assets/thinking_hat.png", height: 100);
+  Widget thinkingHat = Image.asset("assets/colored_thinking_hat.png", height: 100);
 
   Widget bigTitle = const Text(
     "JO'NDEA",
