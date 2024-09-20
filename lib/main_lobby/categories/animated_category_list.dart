@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/main_lobby/categories/summery_cate_list.dart';
 
-class Category extends StatefulWidget {
-  final List<Map> categories;
+class AnimatedCategoryList extends StatefulWidget {
+  final Map<int, Map> categories;
   final double outPadding;
 
-  const Category(this.categories, {super.key, this.outPadding = 0});
+  const AnimatedCategoryList(this.categories, {super.key, this.outPadding = 0});
 
   @override
-  State<Category> createState() => _CategoryState();
+  State<AnimatedCategoryList> createState() => _AnimatedCategoryListState();
 }
 
-class _CategoryState extends State<Category> {
+class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
+  List<Map> categories = [];
   Size size = const Size(300, 400);
   bool stopAutoScroll = false;
   int screenCount = 0;
   double gap = 40;
   late int focus;
+
+  void initCategories() {
+    for (MapEntry cate in widget.categories.entries) {
+      Map data = {};
+      for (MapEntry c in cate.value.entries) {
+        data[c.key] = c.value;
+      }
+      data["index"] = cate.key;
+      categories.add(data);
+    }
+    if (categories.length % 2 == 0) {
+      categories.add({});
+    }
+  }
 
   void restartAutoScroll() {
     resetIndex();
@@ -38,7 +54,7 @@ class _CategoryState extends State<Category> {
   }
 
   void resetIndex() {
-    for (Map cate in widget.categories) {
+    for (Map cate in categories) {
       cate["index"] -= focus;
     }
     focus = 0;
@@ -48,7 +64,7 @@ class _CategoryState extends State<Category> {
   void autoScroll() async {
     while (mounted) {
       if (!stopAutoScroll) focus++;
-      if (!stopAutoScroll && focus >= widget.categories.length) resetIndex();
+      if (!stopAutoScroll && focus >= categories.length) resetIndex();
       if (!stopAutoScroll) setState(() {});
       if (!stopAutoScroll) await Future.delayed(const Duration(seconds: 3));
       if (stopAutoScroll) break;
@@ -56,8 +72,8 @@ class _CategoryState extends State<Category> {
   }
 
   int maxIndex() {
-    int max = widget.categories[0]["index"];
-    for (Map cate in widget.categories) {
+    int max = categories[0]["index"];
+    for (Map cate in categories) {
       if (max < cate["index"]) max = cate["index"];
     }
     return max;
@@ -109,7 +125,7 @@ class _CategoryState extends State<Category> {
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Stack(
-        children: widget.categories.map((cate) => animatedTile(cate)).toList(),
+        children: categories.map((cate) => animatedTile(cate)).toList(),
       ),
     );
   }
@@ -117,14 +133,12 @@ class _CategoryState extends State<Category> {
   @override
   void initState() {
     super.initState();
-    if (widget.categories.length % 2 == 0) {
-      widget.categories.add({});
-    }
-    for (MapEntry cate in widget.categories.asMap().entries) {
+    initCategories();
+    for (MapEntry cate in categories.asMap().entries) {
       cate.value["index"] = cate.key;
       cate.value["ani"] = true;
     }
-    focus = widget.categories.length ~/ 2;
+    focus = categories.length ~/ 2;
     autoScroll();
   }
 
@@ -133,8 +147,8 @@ class _CategoryState extends State<Category> {
     initWithSize();
     return Column(
       children: [
-        CateSummeryLine(
-          widget.categories,
+        SummeryCateList(
+          categories,
           enter: setFixedFocus,
           exit: restartAutoScroll,
         ),
@@ -273,162 +287,6 @@ class _CategoryTileState extends State<CategoryTile> {
             children: [
               frontTitle(),
               detailCover(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CateSummeryLine extends StatefulWidget {
-  final List<Map> categories;
-  final void Function(int) enter;
-  final void Function() exit;
-
-  const CateSummeryLine(
-    this.categories, {
-    super.key,
-    required this.enter,
-    required this.exit,
-  });
-
-  @override
-  State<CateSummeryLine> createState() => _CateSummeryLineState();
-}
-
-class _CateSummeryLineState extends State<CateSummeryLine> {
-  String focusTitle = "";
-
-  void click(Map cate) {
-    if (focusTitle != cate["title"]) {
-      setState(() {
-        focusTitle = cate["title"];
-      });
-      widget.enter(cate["index"]);
-    } else {
-      setState(() {
-        focusTitle = "";
-      });
-      widget.exit();
-    }
-  }
-
-  Widget sortLine = Align(
-    alignment: Alignment.center,
-    child: Container(
-      color: Colors.brown,
-      height: 2,
-      width: double.infinity,
-    ),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    widget.categories.last["padding"] = false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
-      child: Stack(
-        children: [
-          sortLine,
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: widget.categories
-                  .map(
-                    (Map cate) => SummaryTile(
-                      cate,
-                      click: click,
-                      focusTitle: focusTitle,
-                      padding: cate["padding"] ?? true,
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SummaryTile extends StatefulWidget {
-  final Map cate;
-  final bool padding;
-  final String focusTitle;
-  final void Function(Map) click;
-
-  const SummaryTile(
-    this.cate, {
-    super.key,
-    required this.padding,
-    required this.click,
-    required this.focusTitle,
-  });
-
-  @override
-  State<SummaryTile> createState() => _SummaryTileState();
-}
-
-class _SummaryTileState extends State<SummaryTile> {
-  bool focus = false;
-
-  Widget pin() => Container(
-        height: 5,
-        width: 5,
-        margin: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: focus ? Colors.grey[400] : Colors.grey,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 1,
-              spreadRadius: 1,
-            )
-          ],
-        ),
-      );
-
-  @override
-  Widget build(BuildContext context) {
-    focus = widget.focusTitle == widget.cate["title"];
-    return GestureDetector(
-      onTap: () {
-        widget.click(widget.cate);
-      },
-      child: SizedBox(
-        height: 30,
-        child: Container(
-          margin: EdgeInsets.only(right: widget.padding ? 30 : 0),
-          decoration: BoxDecoration(
-            color:
-                focus ? Color.fromRGBO(178, 155, 129, 1.0) : Colors.grey[400],
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                spreadRadius: 0.7,
-                blurRadius: 4,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              pin(),
-              Text(
-                widget.cate["title"],
-                style: TextStyle(
-                  fontWeight: focus ? FontWeight.bold : FontWeight.normal,
-                  fontSize: focus ? 16 : 15,
-                ),
-              ),
-              pin(),
             ],
           ),
         ),
