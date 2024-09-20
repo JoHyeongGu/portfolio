@@ -1,11 +1,11 @@
 {
-    "name": "portfolio",
-    "short_name": "portfolio",
+    "name": "조앤디어: 조씨의 좋은 아이디어 저장소",
+    "short_name": "조앤디어",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Space For Saving portfolios",
+    "description": "조씨의 좋은 아이디어 저장소",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

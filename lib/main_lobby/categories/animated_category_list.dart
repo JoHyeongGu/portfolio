@@ -152,6 +152,7 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
           enter: setFixedFocus,
           exit: restartAutoScroll,
         ),
+        SizedBox(height: 10),
         animatedCategories(),
       ],
     );
@@ -181,9 +182,10 @@ class _CategoryTileState extends State<CategoryTile> {
         opacity: 0.6,
         child: Text(
           widget.data["title"],
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 30,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -196,7 +198,7 @@ class _CategoryTileState extends State<CategoryTile> {
       opacity: onDetail ? 1 : 0,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.white.withOpacity(0.7),
           borderRadius: BorderRadius.circular(15),
         ),
         width: widget.size.width,
@@ -230,6 +232,32 @@ class _CategoryTileState extends State<CategoryTile> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget thumbnail() {
+    return Stack(
+      children: [
+        SizedBox(
+          width: widget.size.width,
+          height: widget.size.height,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Image.network(
+              widget.data["thumbnail"],
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Container(
+          width: widget.size.width,
+          height: widget.size.height,
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(15),
+          ),
+        )
+      ],
     );
   }
 
@@ -276,15 +304,12 @@ class _CategoryTileState extends State<CategoryTile> {
           print(widget.data["path"]);
         },
         onTapDown: (details) => setDetail(true),
-        child: Container(
+        child: SizedBox(
           width: widget.size.width,
           height: widget.size.height,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(15),
-          ),
           child: Stack(
             children: [
+              thumbnail(),
               frontTitle(),
               detailCover(),
             ],
