@@ -223,7 +223,7 @@ class _CategoryTileState extends State<CategoryTile> {
                 widget.data["description"],
                 textAlign: TextAlign.right,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: Colors.black45,
                 ),

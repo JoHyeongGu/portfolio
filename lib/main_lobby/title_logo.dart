@@ -43,19 +43,22 @@ class TitleLogo extends StatelessWidget {
   );
 
   Widget logo() {
-    return GestureDetector(
-      onTap: () {
-        window.location.reload();
-      },
-      child: SizedBox(
-        width: 240,
-        height: 100,
-        child: Stack(
-          children: [
-            Positioned(top: 2, right: 0, child: bigTitle),
-            Positioned(bottom: 20, right: 2.5, child: smallTitle),
-            Positioned(child: thinkingHat),
-          ],
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          window.location.reload();
+        },
+        child: SizedBox(
+          width: 240,
+          height: 100,
+          child: Stack(
+            children: [
+              Positioned(top: 2, right: 0, child: bigTitle),
+              Positioned(bottom: 20, right: 2.5, child: smallTitle),
+              Positioned(child: thinkingHat),
+            ],
+          ),
         ),
       ),
     );

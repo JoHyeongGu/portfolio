@@ -14,6 +14,13 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> {
   Size contentPadding = const Size(60, 45);
 
+  Widget categories() {
+    return AnimatedCategoryList(
+      widget.data["categories"],
+      outPadding: contentPadding.width,
+    );
+  }
+
   Widget contents() {
     return Stack(
       children: [
@@ -24,10 +31,7 @@ class _MainFrameState extends State<MainFrame> {
           ),
           child: Column(
             children: [
-              AnimatedCategoryList(
-                widget.data["categories"],
-                outPadding: contentPadding.width,
-              ),
+              categories(),
               Container(height: 500),
             ],
           ),
@@ -38,19 +42,15 @@ class _MainFrameState extends State<MainFrame> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color.fromRGBO(248, 234, 215, 1.0),
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                TitleLogo(),
-                contents(),
-              ],
-            ),
-          ),
-        ],
+    return ColoredBox(
+      color: const Color.fromRGBO(248, 234, 215, 1.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            TitleLogo(),
+            contents(),
+          ],
+        ),
       ),
     );
   }

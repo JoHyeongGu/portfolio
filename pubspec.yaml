@@ -31,6 +31,15 @@ flutter:
     - family: leeseoyoon
       fonts:
         - asset: assets/fonts/leeseoyoon_font.ttf
+    - family: magicpen
+      fonts:
+        - asset: assets/fonts/Cafe24Supermagic-Regular-v1.0.ttf
+          weight: 400
+        - asset: assets/fonts/Cafe24Supermagic-Bold-v1.0.ttf
+          weight: 700
     - family: pixel
       fonts:
         - asset: assets/fonts/DungGeunMo.ttf
+    - family: dangdang
+      fonts:
+        - asset: assets/fonts/Cafe24Dangdanghae-v2.0.ttf
