@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:html';
 
+import 'package:portfolio/tool/color_list.dart';
+
 class TitleLogo extends StatelessWidget {
   TitleLogo({super.key});
 
@@ -15,7 +17,12 @@ class TitleLogo extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: Colors.white,
           fontFamily: "pixel",
-          shadows: [Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 3, offset: Offset(2, 2))],
+          shadows: [
+            Shadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 3,
+                offset: const Offset(2, 2))
+          ],
         ),
       ),
       Text(
@@ -26,7 +33,12 @@ class TitleLogo extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: Colors.white,
           fontFamily: "pixel",
-          shadows: [Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 3, offset: Offset(2, 2))],
+          shadows: [
+            Shadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 3,
+                offset: const Offset(2, 2))
+          ],
         ),
       ),
     ],
@@ -66,10 +78,11 @@ class TitleLogo extends StatelessWidget {
 
   Widget background({Widget? child}) => Container(
         padding: const EdgeInsets.all(30),
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(64, 72, 66, 1.0),
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-          boxShadow: [
+        decoration: BoxDecoration(
+          color: BANNER_COLOR,
+          borderRadius:
+              const BorderRadius.vertical(bottom: Radius.circular(50)),
+          boxShadow: const [
             BoxShadow(color: Colors.black, spreadRadius: 2, blurRadius: 7)
           ],
         ),
