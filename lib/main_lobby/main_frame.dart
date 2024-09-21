@@ -15,29 +15,41 @@ class _MainFrameState extends State<MainFrame> {
   Size contentPadding = const Size(60, 45);
 
   Widget contents() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: contentPadding.width,
-        vertical: contentPadding.height,
-      ),
-      child: Column(
-        children: [
-          AnimatedCategoryList(
-            widget.data["categories"],
-            outPadding: contentPadding.width,
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: contentPadding.width,
+            vertical: contentPadding.height,
           ),
-        ],
-      ),
+          child: Column(
+            children: [
+              AnimatedCategoryList(
+                widget.data["categories"],
+                outPadding: contentPadding.width,
+              ),
+              Container(height: 500),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Container(
+      color: Color.fromRGBO(248, 234, 215, 1.0),
+      child: Stack(
         children: [
-          TitleLogo(),
-          contents(),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                TitleLogo(),
+                contents(),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -31,3 +31,6 @@ flutter:
     - family: leeseoyoon
       fonts:
         - asset: assets/fonts/leeseoyoon_font.ttf
+    - family: pixel
+      fonts:
+        - asset: assets/fonts/DungGeunMo.ttf

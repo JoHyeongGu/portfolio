@@ -4,17 +4,32 @@ import 'dart:html';
 class TitleLogo extends StatelessWidget {
   TitleLogo({super.key});
 
-  Widget thinkingHat = Image.asset("assets/colored_thinking_hat.png", height: 100);
+  Widget thinkingHat = Image.asset("assets/thinking_J.png", height: 86);
 
-  Widget bigTitle = const Text(
-    "JO'NDEA",
-    style: TextStyle(
-      fontSize: 40,
-      letterSpacing: 5,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-      fontFamily: "leeseoyoon",
-    ),
+  Widget bigTitle = Row(
+    children: [
+      Text(
+        "O'",
+        style: TextStyle(
+          fontSize: 52,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontFamily: "pixel",
+          shadows: [Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 3, offset: Offset(2, 2))],
+        ),
+      ),
+      Text(
+        "NDEA",
+        style: TextStyle(
+          fontSize: 52,
+          letterSpacing: 3,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontFamily: "pixel",
+          shadows: [Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 3, offset: Offset(2, 2))],
+        ),
+      ),
+    ],
   );
 
   Widget smallTitle = const Text(
@@ -23,7 +38,7 @@ class TitleLogo extends StatelessWidget {
       fontSize: 15,
       color: Colors.white,
       fontFamily: "leeseoyoon",
-      letterSpacing: 0.8,
+      letterSpacing: 0.6,
     ),
   );
 
@@ -33,13 +48,13 @@ class TitleLogo extends StatelessWidget {
         window.location.reload();
       },
       child: SizedBox(
-        width: 285,
+        width: 240,
         height: 100,
         child: Stack(
           children: [
+            Positioned(top: 2, right: 0, child: bigTitle),
+            Positioned(bottom: 20, right: 2.5, child: smallTitle),
             Positioned(child: thinkingHat),
-            Positioned(top: 10, right: 0, child: bigTitle),
-            Positioned(bottom: 20, right: 0, child: smallTitle),
           ],
         ),
       ),
@@ -49,8 +64,8 @@ class TitleLogo extends StatelessWidget {
   Widget background({Widget? child}) => Container(
         padding: const EdgeInsets.all(30),
         decoration: const BoxDecoration(
-          color: Color.fromRGBO(98, 113, 104, 1.0),
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+          color: Color.fromRGBO(64, 72, 66, 1.0),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
           boxShadow: [
             BoxShadow(color: Colors.black, spreadRadius: 2, blurRadius: 7)
           ],

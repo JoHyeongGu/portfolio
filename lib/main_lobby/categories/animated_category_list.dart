@@ -249,14 +249,6 @@ class _CategoryTileState extends State<CategoryTile> {
             ),
           ),
         ),
-        Container(
-          width: widget.size.width,
-          height: widget.size.height,
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(15),
-          ),
-        )
       ],
     );
   }

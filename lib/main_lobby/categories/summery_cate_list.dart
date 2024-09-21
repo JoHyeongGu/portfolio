@@ -58,11 +58,12 @@ class _SummeryCateListState extends State<SummeryCateList> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30,
+      height: 50,
       child: Stack(
         children: [
           sortLine,
           SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -131,9 +132,10 @@ class _SummaryTileState extends State<SummaryTile> {
         widget.click(widget.cate);
       },
       child: SizedBox(
-        height: 30,
+        height: 50,
         child: Container(
-          margin: EdgeInsets.only(right: widget.padding ? 30 : 0),
+          margin: EdgeInsets.only(
+              right: widget.padding ? 30 : 0, top: 10, bottom: 10),
           decoration: BoxDecoration(
             color: focus
                 ? const Color.fromRGBO(178, 155, 129, 1.0)
