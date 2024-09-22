@@ -1,11 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/main_lobby/main_frame.dart';
 import 'package:portfolio/test_data.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void initFlutter() {
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
   };
+}
+
+Future<void> initFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+  FirebaseFirestore.instance.settings =
+      const Settings(persistenceEnabled: true);
+}
+
+void main() async {
+  initFlutter();
+  await initFirebase();
   Map data = testData;
   runApp(MyApp(data));
 }
