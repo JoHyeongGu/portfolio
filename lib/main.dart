@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:portfolio/main_lobby/main_frame.dart';
-import 'package:portfolio/test_data.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter/material.dart';
+import 'package:portfolio/test_data.dart';
+import 'package:portfolio/tool/database.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:portfolio/main_lobby/main_frame.dart';
 
 void initFlutter() {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -11,22 +11,24 @@ void initFlutter() {
   };
 }
 
-Future<void> initFirebase() async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
-  FirebaseFirestore.instance.settings =
-      const Settings(persistenceEnabled: true);
+Future<FirebaseApp> initFirebase() async {
+  FirebaseApp app =
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+  return app;
 }
 
 void main() async {
   initFlutter();
-  await initFirebase();
-  Map data = testData;
-  runApp(MyApp(data));
+  Map metadata = {
+    "firebase": await initFirebase(),
+    "database": Database(),
+  };
+  runApp(MyApp(metadata));
 }
 
 class MyApp extends StatelessWidget {
-  final Map data;
-  const MyApp(this.data, {super.key});
+  final Map metadata;
+  const MyApp(this.metadata, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
         useMaterial3: true,
       ),
-      home: Scaffold(body: MainFrame(data)),
+      home: Scaffold(body: MainFrame(metadata)),
     );
   }
 }

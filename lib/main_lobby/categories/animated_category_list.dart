@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:portfolio/main_lobby/categories/summery_cate_list.dart';
 
 class AnimatedCategoryList extends StatefulWidget {
-  final Map<int, Map> categories;
+  final List<Map> categories;
   final double outPadding;
 
   const AnimatedCategoryList(this.categories, {super.key, this.outPadding = 0});
@@ -12,26 +12,11 @@ class AnimatedCategoryList extends StatefulWidget {
 }
 
 class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
-  List<Map> categories = [];
   Size size = const Size(300, 400);
   bool stopAutoScroll = false;
   int screenCount = 0;
   double gap = 40;
   late int focus;
-
-  void initCategories() {
-    for (MapEntry cate in widget.categories.entries) {
-      Map data = {};
-      for (MapEntry c in cate.value.entries) {
-        data[c.key] = c.value;
-      }
-      data["index"] = cate.key;
-      categories.add(data);
-    }
-    if (categories.length % 2 == 0) {
-      categories.add({});
-    }
-  }
 
   void restartAutoScroll() {
     resetIndex();
@@ -54,7 +39,7 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
   }
 
   void resetIndex() {
-    for (Map cate in categories) {
+    for (Map cate in widget.categories) {
       cate["index"] -= focus;
     }
     focus = 0;
@@ -64,7 +49,7 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
   void autoScroll() async {
     while (mounted) {
       if (!stopAutoScroll) focus++;
-      if (!stopAutoScroll && focus >= categories.length) resetIndex();
+      if (!stopAutoScroll && focus >= widget.categories.length) resetIndex();
       if (!stopAutoScroll) setState(() {});
       if (!stopAutoScroll) await Future.delayed(const Duration(seconds: 3));
       if (stopAutoScroll) break;
@@ -72,8 +57,8 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
   }
 
   int maxIndex() {
-    int max = categories[0]["index"];
-    for (Map cate in categories) {
+    int max = widget.categories[0]["index"];
+    for (Map cate in widget.categories) {
       if (max < cate["index"]) max = cate["index"];
     }
     return max;
@@ -109,7 +94,7 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
       left: pos,
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 10),
-        opacity: cate["ani"] ? 1 : 0,
+        opacity: cate["ani"] ?? false ? 1 : 0,
         child: CategoryTile(
           cate,
           size: size,
@@ -122,10 +107,11 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
   Widget animatedCategories() {
     return AnimatedContainer(
       height: size.height,
+      padding: const EdgeInsets.symmetric(vertical: 10),
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Stack(
-        children: categories.map((cate) => animatedTile(cate)).toList(),
+        children: widget.categories.map((cate) => animatedTile(cate)).toList(),
       ),
     );
   }
@@ -133,12 +119,11 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
   @override
   void initState() {
     super.initState();
-    initCategories();
-    for (MapEntry cate in categories.asMap().entries) {
+    for (MapEntry cate in widget.categories.asMap().entries) {
       cate.value["index"] = cate.key;
       cate.value["ani"] = true;
     }
-    focus = categories.length ~/ 2;
+    focus = widget.categories.length ~/ 2;
     autoScroll();
   }
 
@@ -148,11 +133,10 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
     return Column(
       children: [
         SummeryCateList(
-          categories,
+          widget.categories,
           enter: setFixedFocus,
           exit: restartAutoScroll,
         ),
-        SizedBox(height: 10),
         animatedCategories(),
       ],
     );
@@ -182,7 +166,7 @@ class _CategoryTileState extends State<CategoryTile> {
         opacity: 0.6,
         child: Text(
           widget.data["title"],
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -202,7 +186,7 @@ class _CategoryTileState extends State<CategoryTile> {
           borderRadius: BorderRadius.circular(15),
         ),
         width: widget.size.width,
-        height: widget.size.height,
+        height: widget.size.height - 30,
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
@@ -240,7 +224,7 @@ class _CategoryTileState extends State<CategoryTile> {
       children: [
         SizedBox(
           width: widget.size.width,
-          height: widget.size.height,
+          height: widget.size.height - 30,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: Image.network(
@@ -296,9 +280,19 @@ class _CategoryTileState extends State<CategoryTile> {
           print(widget.data["path"]);
         },
         onTapDown: (details) => setDetail(true),
-        child: SizedBox(
+        child: Container(
           width: widget.size.width,
-          height: widget.size.height,
+          height: widget.size.height - 30,
+          margin: const EdgeInsets.only(top: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.7),
+                blurRadius: 3,
+              ),
+            ],
+          ),
           child: Stack(
             children: [
               thumbnail(),

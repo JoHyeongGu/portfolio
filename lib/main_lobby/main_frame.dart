@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio/main_lobby/post_list/recent_post_list.dart';
+import 'package:portfolio/tool/color_list.dart';
 import 'package:portfolio/main_lobby/profile.dart';
 import 'package:portfolio/main_lobby/title_logo.dart';
+import 'package:portfolio/main_lobby/post_list/recent_post_list.dart';
 import 'package:portfolio/main_lobby/categories/animated_category_list.dart';
-import 'package:portfolio/tool/color_list.dart';
+import 'package:portfolio/tool/loading.dart';
 
 class MainFrame extends StatefulWidget {
-  final Map data;
+  final Map metadata;
 
-  const MainFrame(this.data, {super.key});
+  const MainFrame(this.metadata, {super.key});
 
   @override
   State<MainFrame> createState() => _MainFrameState();
@@ -17,17 +18,17 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> {
   Size contentPadding = const Size(60, 45);
 
-  Widget categories() {
+  Widget categories(List<Map> categoryList) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 25),
       child: AnimatedCategoryList(
-        widget.data["categories"],
+        categoryList,
         outPadding: contentPadding.width,
       ),
     );
   }
 
-  Widget contents() {
+  Widget contents(Map data) {
     return Stack(
       children: [
         Padding(
@@ -37,7 +38,7 @@ class _MainFrameState extends State<MainFrame> {
           ),
           child: Column(
             children: [
-              categories(),
+              categories(data["category"]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -60,14 +61,30 @@ class _MainFrameState extends State<MainFrame> {
         child: Column(
           children: [
             TitleLogo(),
-            contents(),
+            FutureBuilder(
+                future: widget.metadata["database"].mainLobbyData(),
+                builder: (context, AsyncSnapshot<Map> snapshot) {
+                  if (snapshot.hasData == false) {
+                    return Loading();
+                  } else if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    );
+                  } else {
+                    return contents(snapshot.data!);
+                  }
+                }),
             Container(
               color: PAGE_END_COLOR,
-              height: 150,
-              child: Align(
+              height: 100,
+              child: const Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 5,
                   ),
