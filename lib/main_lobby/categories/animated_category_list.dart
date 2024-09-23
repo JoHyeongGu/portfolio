@@ -83,7 +83,7 @@ class _AnimatedCategoryListState extends State<AnimatedCategoryList> {
             cate["index"] = maxIndex() + 1;
             cate["ani"] = false;
           });
-        } else if (!cate["ani"]) {
+        } else if (!cate["ani"] || cate["ani"] == null) {
           setState(() {
             cate["ani"] = true;
           });
@@ -220,20 +220,16 @@ class _CategoryTileState extends State<CategoryTile> {
   }
 
   Widget thumbnail() {
-    return Stack(
-      children: [
-        SizedBox(
-          width: widget.size.width,
-          height: widget.size.height - 30,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.network(
-              widget.data["thumbnail"],
-              fit: BoxFit.cover,
-            ),
-          ),
+    return SizedBox(
+      width: widget.size.width,
+      height: widget.size.height - 30,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Image.network(
+          widget.data["thumbnail"],
+          fit: BoxFit.cover,
         ),
-      ],
+      ),
     );
   }
 

@@ -18,16 +18,6 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> {
   Size contentPadding = const Size(60, 45);
 
-  Widget categories(List<Map> categoryList) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 25),
-      child: AnimatedCategoryList(
-        categoryList,
-        outPadding: contentPadding.width,
-      ),
-    );
-  }
-
   Widget contents(Map data) {
     return Stack(
       children: [
@@ -38,12 +28,15 @@ class _MainFrameState extends State<MainFrame> {
           ),
           child: Column(
             children: [
-              categories(data["category"]),
+              AnimatedCategoryList(
+                data["category"],
+                outPadding: contentPadding.width,
+              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Profile(),
-                  Flexible(child: RecentPostList()),
+                  RecentPostList(data["recentPost"]),
                 ],
               ),
             ],
