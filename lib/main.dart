@@ -1,13 +1,11 @@
-import 'package:fluro/fluro.dart';
-import 'package:portfolio/base_data.dart';
-import 'package:portfolio/tool/color_list.dart';
-import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/router.dart';
+import 'package:portfolio/base_data.dart';
 import 'package:portfolio/tool/database.dart';
+import 'package:portfolio/tool/color_list.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:portfolio/main_lobby/main_frame.dart';
 
 void initFlutter() {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -47,9 +45,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: BANNER_COLOR),
           useMaterial3: true,
         ),
-        // onGenerateRoute: WebRouter.router.generator,
-        // initialRoute: "/",
-        home: Scaffold(body: MainPage()),
+        onGenerateRoute: WebRouter.router.generator,
+        initialRoute: "/",
+        // home: Scaffold(body: MainPage()),
       ),
     );
   }

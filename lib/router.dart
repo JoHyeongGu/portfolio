@@ -1,33 +1,32 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:portfolio/test_data.dart';
 import 'package:portfolio/main_lobby/main_frame.dart';
+import 'package:portfolio/new_design/cover_page.dart';
 
 class WebRouter {
   static FluroRouter router = FluroRouter();
 
-  static final Handler mainLobby = Handler(
-      handlerFunc: (context, Map<String, dynamic> params) => Scaffold());
-  static final Handler _Test2 = Handler(
-    handlerFunc: (context, Map<String, dynamic> params) =>
-        Center(child: Text(params.toString())),
-  );
-  static final Handler _Test3 = Handler(
-    handlerFunc: (context, Map<String, dynamic> params) =>
-        Center(child: Text("Big One")),
-  );
+  static Handler Page({required Widget child}) {
+    return Handler(
+      handlerFunc: (context, Map<String, dynamic> params) => Scaffold(
+        body: child,
+      ),
+    );
+  }
 
   static void defineRoutes() {
     router.define(
       '/',
-      handler: mainLobby,
+      handler: Page(child: CoverPage()),
     );
     router.define(
-      '/test2',
-      handler: _Test2,
+      '/old',
+      handler: Page(child: MainPage()),
     );
     router.define(
-      '/test2',
-      handler: _Test2,
+      '/test',
+      handler: Page(child: TestWidget()),
     );
   }
 

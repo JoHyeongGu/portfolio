@@ -47,6 +47,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("MainPage 빌드");
     return ColoredBox(
       color: BACKGROUND_COLOR,
       child: SingleChildScrollView(
@@ -55,7 +56,6 @@ class _MainPageState extends State<MainPage> {
             TitleLogo(),
             FutureBuilder(
                 future: BaseData.of(context)?.db.mainLobbyData(),
-                // future: widget.metadata["database"].mainLobbyData(),
                 builder: (context, AsyncSnapshot<Map> snapshot) {
                   if (snapshot.hasData == false) {
                     return Loading();

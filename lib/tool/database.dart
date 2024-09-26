@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Database {
-  late FirebaseFirestore db;
-
-  Database() {
-    db = FirebaseFirestore.instance;
-  }
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Data Set in Page Function
   Future<Map> mainLobbyData() async {
