@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/base_data.dart';
 import 'package:portfolio/tool/color_list.dart';
 import 'package:portfolio/main_lobby/profile.dart';
 import 'package:portfolio/main_lobby/title_logo.dart';
@@ -6,16 +7,14 @@ import 'package:portfolio/main_lobby/post_list/recent_post_list.dart';
 import 'package:portfolio/main_lobby/categories/animated_category_list.dart';
 import 'package:portfolio/tool/loading.dart';
 
-class MainFrame extends StatefulWidget {
-  final Map metadata;
-
-  const MainFrame(this.metadata, {super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  State<MainFrame> createState() => _MainFrameState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _MainFrameState extends State<MainFrame> {
+class _MainPageState extends State<MainPage> {
   Size contentPadding = const Size(60, 45);
 
   Widget contents(Map data) {
@@ -55,7 +54,8 @@ class _MainFrameState extends State<MainFrame> {
           children: [
             TitleLogo(),
             FutureBuilder(
-                future: widget.metadata["database"].mainLobbyData(),
+                future: BaseData.of(context)?.db.mainLobbyData(),
+                // future: widget.metadata["database"].mainLobbyData(),
                 builder: (context, AsyncSnapshot<Map> snapshot) {
                   if (snapshot.hasData == false) {
                     return Loading();
