@@ -1,8 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:portfolio/test_data.dart';
-import 'package:portfolio/main_lobby/main_frame.dart';
-import 'package:portfolio/new_design/cover_page.dart';
+import 'package:portfolio/main_lobby/main_page.dart';
 
 class WebRouter {
   static FluroRouter router = FluroRouter();
@@ -18,10 +16,6 @@ class WebRouter {
   static void defineRoutes() {
     router.define(
       '/',
-      handler: Page(child: CoverPage()),
-    );
-    router.define(
-      '/old',
       handler: Page(child: MainPage()),
     );
     router.define(
@@ -32,5 +26,20 @@ class WebRouter {
 
   static void navigateTo(BuildContext context, String route) {
     router.navigateTo(context, route, transition: TransitionType.fadeIn);
+  }
+}
+
+class TestWidget extends StatefulWidget {
+  const TestWidget({super.key});
+
+  @override
+  State<TestWidget> createState() => _TestWidgetState();
+}
+
+class _TestWidgetState extends State<TestWidget> {
+  @override
+  Widget build(BuildContext context) {
+    print("Test 위젯 빌드!!");
+    return Text("Test");
   }
 }

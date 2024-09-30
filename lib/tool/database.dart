@@ -21,6 +21,7 @@ class Database {
       Map data = e.value;
       data["id"] = e.key;
       data["index"] = index;
+      index++;
       result.add(data);
     }
     return result;
@@ -54,5 +55,15 @@ class Database {
     }
     print("Get Data in Post List Collection");
     return data;
+  }
+
+  Future<List<Map>> getCategoryList() async {
+    CollectionReference col = db.collection("category");
+    Map data = {};
+    for (var doc in (await col.get()).docs) {
+      data[doc.id] = doc.data();
+    }
+    print("Get Data in Category Collection");
+    return mapToList(data);
   }
 }
