@@ -5,22 +5,22 @@ import 'package:portfolio/main_lobby/main_page.dart';
 class WebRouter {
   static FluroRouter router = FluroRouter();
 
-  static Handler Page({required Widget child}) {
-    return Handler(
-      handlerFunc: (context, Map<String, dynamic> params) => Scaffold(
-        body: child,
-      ),
-    );
-  }
-
   static void defineRoutes() {
     router.define(
       '/',
-      handler: Page(child: MainPage()),
+      handler: Handler(
+        handlerFunc: (context, Map<String, dynamic> params) => const Scaffold(
+          body: MainPage(),
+        ),
+      ),
     );
     router.define(
       '/test',
-      handler: Page(child: TestWidget()),
+      handler: Handler(
+        handlerFunc: (context, Map<String, dynamic> params) => Scaffold(
+          body: TestWidget(params.toString()),
+        ),
+      ),
     );
   }
 
@@ -30,7 +30,8 @@ class WebRouter {
 }
 
 class TestWidget extends StatefulWidget {
-  const TestWidget({super.key});
+  final String txt;
+  const TestWidget(this.txt, {super.key});
 
   @override
   State<TestWidget> createState() => _TestWidgetState();
@@ -40,6 +41,6 @@ class _TestWidgetState extends State<TestWidget> {
   @override
   Widget build(BuildContext context) {
     print("Test 위젯 빌드!!");
-    return Text("Test");
+    return Text(widget.txt);
   }
 }

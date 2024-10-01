@@ -66,7 +66,7 @@ class Database {
     if (today == (await rtDb.ref("last_date").get()).value) {
       await rtDb.ref("site_info/user_count").set(info["user_count"] + 1);
     } else {
-      await rtDb.ref("site_info/user_count").set(0);
+      await rtDb.ref("site_info/user_count").set(1);
       await rtDb.ref("last_date").set(today);
     }
     await rtDb.ref("site_info/user_total").set(info["user_total"] + 1);

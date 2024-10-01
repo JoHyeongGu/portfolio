@@ -62,15 +62,29 @@ class _InfoTileState extends State<InfoTile> {
       dataListener = null;
       print("Listener Cancel");
     }
-    Text text(txt) {
-      return Text(
-        txt,
-        style: TextStyle(
-          color: Colors.white.withOpacity(0.7),
-          fontFamily: "dangdang",
-          fontSize: 14,
-          wordSpacing: 0.2,
-        ),
+    Widget text(String key, String value) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            key,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontFamily: "dangdang",
+              fontSize: 14,
+              wordSpacing: 0.2,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontFamily: "dangdang",
+              fontSize: 14,
+              wordSpacing: 0.2,
+            ),
+          ),
+        ],
       );
     }
 
@@ -81,17 +95,20 @@ class _InfoTileState extends State<InfoTile> {
         color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            text(
-                "접속 수 (누적): ${infoData["user_count"]} (${infoData["user_total"]})"),
-            text("좋아요 수: ${infoData["like_count"]}"),
-            text(
-                "댓글 수 (누적): ${infoData["comment_count"]} (${infoData["comment_total"]})"),
-          ],
-        ),
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          text(
+            "접속 수 (누적): ",
+            "${infoData["user_count"]} (${infoData["user_total"]})",
+          ),
+          text("좋아요 수: ", "${infoData["like_count"]}"),
+          text(
+            "댓글 수 (누적): ",
+            "${infoData["comment_count"]} (${infoData["comment_total"]})",
+          ),
+        ],
       ),
     );
   }

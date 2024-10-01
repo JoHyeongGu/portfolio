@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
+import 'package:portfolio/router.dart';
 import 'package:portfolio/tool/color_list.dart';
 
 class CategoryList extends StatefulWidget {
@@ -50,7 +51,7 @@ class _CategoryListState extends State<CategoryList> {
       }
       _controller.animateTo(
         (size.width + 15) * (focus + 1),
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
       if (autoCount > 1 || !widget.open) {
@@ -59,7 +60,25 @@ class _CategoryListState extends State<CategoryList> {
       }
       focus++;
       if (focus >= data.length) focus = 0;
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 3));
+    }
+  }
+
+  void fixCategoryTile(int index) {
+    autoCount++;
+    focus = index;
+    _controller.animateTo(
+      (size.width + 15) * (focus + 1),
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void startAutoScroll() async {
+    autoCount--;
+    await Future.delayed(const Duration(seconds: 1));
+    if (autoCount == 0 && widget.open && data.isNotEmpty) {
+      autoScroll();
     }
   }
 
@@ -117,29 +136,10 @@ class _CategoryListState extends State<CategoryList> {
     );
   }
 
-  Widget cateText(Map data) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: MouseRegion(
-        onEnter: (details) {},
-        child: Text(
-          data["title"],
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontFamily: "dangdang",
-            letterSpacing: 1,
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     getData();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: size.width,
@@ -157,8 +157,136 @@ class _CategoryListState extends State<CategoryList> {
           ),
         ),
         const SizedBox(height: 15),
-        ...data.map((d) => cateText(d)),
+        CateTextList(
+          data,
+          size: size,
+          enter: fixCategoryTile,
+          exit: startAutoScroll,
+        ),
       ],
+    );
+  }
+}
+
+class CateTextList extends StatefulWidget {
+  final Size size;
+  final List<Map> datas;
+  final void Function(int) enter;
+  final void Function() exit;
+  const CateTextList(
+    this.datas, {
+    super.key,
+    required this.size,
+    required this.enter,
+    required this.exit,
+  });
+
+  @override
+  State<CateTextList> createState() => _CateTextListState();
+}
+
+class _CateTextListState extends State<CateTextList> {
+  bool more = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: widget.size.width,
+          height: more ? 26 * widget.datas.length + 10 as double : 135,
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.datas
+                  .map(
+                    (data) => CateText(
+                      data,
+                      enter: widget.enter,
+                      exit: widget.exit,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: double.infinity,
+          child: Center(
+            child: IconButton(
+              onPressed: () => setState(() {
+                more = !more;
+              }),
+              icon: Icon(
+                more ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                color: Colors.white.withOpacity(0.5),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class CateText extends StatefulWidget {
+  final Map data;
+  final void Function(int) enter;
+  final void Function() exit;
+  const CateText(
+    this.data, {
+    super.key,
+    required this.enter,
+    required this.exit,
+  });
+
+  @override
+  State<CateText> createState() => _CateTextState();
+}
+
+class _CateTextState extends State<CateText> {
+  bool focus = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (details) => setState(() {
+          focus = true;
+          widget.enter(widget.data["index"]);
+        }),
+        onExit: (details) => setState(() {
+          focus = false;
+          widget.exit();
+        }),
+        child: GestureDetector(
+          onTapDown: (details) => setState(() {
+            focus = true;
+            widget.enter(widget.data["index"]);
+          }),
+          onTapUp: (event) {
+            WebRouter.navigateTo(context, "/test?cate=${widget.data["path"]}&type=test");
+          },
+          onTapCancel: () => setState(() {
+            focus = false;
+            widget.exit();
+          }),
+          child: Text(
+            widget.data["title"],
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontFamily: "dangdang",
+              letterSpacing: 1,
+              fontWeight: focus ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
