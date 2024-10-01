@@ -18,6 +18,8 @@ dependencies:
   fluro: ^2.0.5
   url_strategy: ^0.3.0
   smooth_scroll_multiplatform: ^1.0.8
+  firebase_database: ^11.1.4
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

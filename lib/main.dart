@@ -16,8 +16,18 @@ void initFlutter() {
 }
 
 Future<FirebaseApp> initFirebase() async {
-  FirebaseApp app =
-      await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+  FirebaseOptions option = const FirebaseOptions(
+    apiKey: "AIzaSyCWf19NFkyYs12qre0cSKO-OzTMxdP8Iuk",
+    authDomain: "jondea-b86bd.firebaseapp.com",
+    databaseURL:
+        "https://jondea-b86bd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "jondea-b86bd",
+    storageBucket: "jondea-b86bd.appspot.com",
+    messagingSenderId: "876586657409",
+    appId: "1:876586657409:web:f9dd65ed2d5b3c680bcf80",
+    measurementId: "G-KLQE5NY8Y2",
+  );
+  FirebaseApp app = await Firebase.initializeApp(options: option);
   return app;
 }
 

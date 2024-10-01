@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/main_lobby/category_list.dart';
+import 'package:portfolio/main_lobby/info_tile.dart';
 import 'package:portfolio/main_lobby/logo.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
@@ -35,7 +36,7 @@ class _HambergerMenuState extends State<HambergerMenu> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-            child: HambergerBtn(size: 19, trigger: switchOpen),
+            child: HambergerBtn(size: 25, trigger: switchOpen),
           ),
         ],
       ),
@@ -116,33 +117,47 @@ class Contents extends StatefulWidget {
 }
 
 class _ContentsState extends State<Contents> {
-  List<Widget> logo() {
-    return [
-      SiteLogo(size: widget.width / 7 * 4),
-      const SizedBox(height: 100),
-    ];
-  }
-
-  List<Widget> category() {
+  Widget info() {
     Widget title = Text(
-      "카테고리",
+      "< INFO >",
       style: TextStyle(
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withOpacity(0.7),
         fontSize: 25,
         fontFamily: "pixel",
         letterSpacing: 0.2,
         fontWeight: FontWeight.bold,
       ),
     );
-    return [
-      Column(
+    return Padding(
+      padding: const EdgeInsets.only(top: 70, bottom: 40),
+      child: Column(
         children: [
           title,
-          SizedBox(height: 15),
-          CategoryList(widget.open),
+          const SizedBox(height: 10),
+          InfoTile(widget.open),
         ],
       ),
-    ];
+    );
+  }
+
+  Widget category() {
+    Widget title = Text(
+      "< 카테고리 >",
+      style: TextStyle(
+        color: Colors.white.withOpacity(0.7),
+        fontSize: 22,
+        fontFamily: "pixel",
+        letterSpacing: 0.2,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    return Column(
+      children: [
+        title,
+        const SizedBox(height: 15),
+        CategoryList(widget.open),
+      ],
+    );
   }
 
   @override
@@ -153,17 +168,18 @@ class _ContentsState extends State<Contents> {
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(vertical: 30),
       child: DynMouseScroll(
-        durationMS : 500,
-        scrollSpeed : 3,
-        animationCurve : Curves.easeOutQuart,
+        durationMS: 1000,
+        scrollSpeed: 2,
+        animationCurve: Curves.easeOutQuart,
         builder: (context, controller, physics) => SingleChildScrollView(
           controller: controller,
           physics: physics,
           child: Column(
             children: [
               const SizedBox(height: 70),
-              ...logo(),
-              ...category(),
+              SiteLogo(size: widget.width / 7 * 4),
+              info(),
+              category(),
             ],
           ),
         ),

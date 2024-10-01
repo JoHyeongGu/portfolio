@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
+import 'package:portfolio/tool/color_list.dart';
 
 class CategoryList extends StatefulWidget {
   final bool open;
@@ -30,8 +31,7 @@ class _CategoryListState extends State<CategoryList> {
 
   void getData() async {
     if (widget.open && data.isEmpty) {
-      List<Map> dbDatas = await BaseData.of(context)!.db.getCategoryList();
-      data.addAll(dbDatas);
+      data = await BaseData.of(context)!.db.getCategoryList();
     }
     setState(() {});
     if (autoCount == 0 && widget.open && data.isNotEmpty) {
@@ -71,7 +71,7 @@ class _CategoryListState extends State<CategoryList> {
           width: size.width,
           height: size.height,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.4),
+            color: BANNER_COLOR,
             borderRadius: BorderRadius.circular(15),
           ),
           child: isData
@@ -82,7 +82,15 @@ class _CategoryListState extends State<CategoryList> {
                     fit: BoxFit.cover,
                   ),
                 )
-              : null,
+              : Opacity(
+                  opacity: 0.7,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Center(
+                      child: Image.asset("assets/thinking_hat.png"),
+                    ),
+                  ),
+                ),
         ),
         Container(
           width: size.width,
@@ -110,16 +118,18 @@ class _CategoryListState extends State<CategoryList> {
   }
 
   Widget cateText(Map data) {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.only(top: 10),
-      width: size.width,
-      child: Text(
-        data["title"],
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontFamily: "dangdang",
-          letterSpacing: 1,
+      child: MouseRegion(
+        onEnter: (details) {},
+        child: Text(
+          data["title"],
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontFamily: "dangdang",
+            letterSpacing: 1,
+          ),
         ),
       ),
     );
@@ -129,6 +139,7 @@ class _CategoryListState extends State<CategoryList> {
   Widget build(BuildContext context) {
     getData();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: size.width,

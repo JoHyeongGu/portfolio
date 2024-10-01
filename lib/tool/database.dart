@@ -1,17 +1,10 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class Database {
   FirebaseFirestore db = FirebaseFirestore.instance;
-
-  // Data Set in Page Function
-  Future<Map> mainLobbyData() async {
-    Map recentPost = await getRecentPost();
-    Map categoryData = await getCategory();
-    return {
-      "category": mapToList(categoryData),
-      "recentPost": mapToList(recentPost),
-    };
-  }
+  FirebaseDatabase rtDb = FirebaseDatabase.instance;
 
   // TOOL
   List<Map> mapToList(Map from) {
@@ -28,35 +21,6 @@ class Database {
   }
 
   // CRUD
-  Future<Map> getCategory() async {
-    CollectionReference col = db.collection("category");
-    Map data = {};
-    for (var doc in (await col.get()).docs) {
-      data[doc.id] = doc.data();
-    }
-    print("Get Data in Category Collection");
-    return data;
-  }
-
-  Future<Map> getRecentPost({String? category}) async {
-    CollectionReference col = db.collection("post_list");
-    Query query = col
-        .orderBy(
-          "updated_at",
-          descending: true,
-        )
-        .limit(10);
-    if (category != null) {
-      query = query.where('category_id', arrayContains: category);
-    }
-    Map data = {};
-    for (var doc in (await query.get()).docs) {
-      data[doc.id] = doc.data();
-    }
-    print("Get Data in Post List Collection");
-    return data;
-  }
-
   Future<List<Map>> getCategoryList() async {
     CollectionReference col = db.collection("category");
     Map data = {};
@@ -65,5 +29,47 @@ class Database {
     }
     print("Get Data in Category Collection");
     return mapToList(data);
+  }
+
+  Future<bool> isUserTodayWithIp(String ip) async {
+    CollectionReference col = db.collection("user");
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    var data = await col
+        .where('last_enter', isGreaterThanOrEqualTo: today)
+        .where("ip", isEqualTo: ip)
+        .get();
+    print("Checked User IP is in DB...");
+    return data.docs.isNotEmpty;
+  }
+
+  Future<void> addUser(Map user) async {
+    CollectionReference col = db.collection("user");
+    var data = await col.where("ip", isEqualTo: user["ip"]).get();
+    if (data.docs.isNotEmpty) {
+      col.doc(data.docs[0].id).update({"last_enter": user["last_enter"]});
+      print("Update User Data");
+    } else {
+      await col.add(user);
+      print("Post User Data");
+    }
+  }
+
+  StreamSubscription<DatabaseEvent> listenSiteInfo(void Function(DatabaseEvent) listener) {
+    Stream<DatabaseEvent> stream = rtDb.ref("site_info").onValue;
+    return stream.listen(listener);
+  }
+
+  Future<void> realtimeUpdateUserCount() async {
+    String today = DateTime.now().toString().split(" ")[0];
+    Map info = (await rtDb.ref("site_info").get()).value as Map;
+    if (today == (await rtDb.ref("last_date").get()).value) {
+      await rtDb.ref("site_info/user_count").set(info["user_count"] + 1);
+    } else {
+      await rtDb.ref("site_info/user_count").set(0);
+      await rtDb.ref("last_date").set(today);
+    }
+    await rtDb.ref("site_info/user_total").set(info["user_total"] + 1);
+    print("Update User Count");
   }
 }
