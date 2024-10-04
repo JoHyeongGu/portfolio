@@ -270,7 +270,7 @@ class _CateTextState extends State<CateText> {
           }),
           onTapUp: (event) {
             WebRouter.navigateTo(
-                context, "/test?cate=${widget.data["path"]}&type=test");
+                context, "/category?type=${widget.data["path"]}");
           },
           onTapCancel: () => setState(() {
             focus = false;

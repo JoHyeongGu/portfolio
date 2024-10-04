@@ -15,7 +15,15 @@ class WebRouter {
       ),
     );
     router.define(
-      '/test',
+      '/category',
+      handler: Handler(
+        handlerFunc: (context, Map<String, dynamic> params) => Scaffold(
+          body: TestWidget(params.toString()),
+        ),
+      ),
+    );
+    router.define(
+      '/post',
       handler: Handler(
         handlerFunc: (context, Map<String, dynamic> params) => Scaffold(
           body: TestWidget(params.toString()),
@@ -25,7 +33,7 @@ class WebRouter {
   }
 
   static void navigateTo(BuildContext context, String route) {
-    router.navigateTo(context, route, transition: TransitionType.fadeIn);
+    router.navigateTo(context, route, transition: TransitionType.material);
   }
 }
 

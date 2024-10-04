@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
+import 'package:portfolio/router.dart';
 import 'package:portfolio/tool/color_list.dart';
 
 class RecentPostList extends StatefulWidget {
@@ -37,27 +38,54 @@ class _RecentPostListState extends State<RecentPostList> {
       return title.length > max ? "${title.substring(0, max - 2)}..." : title;
     }
 
-    return Container(
-      // margin: EdgeInsets.symmetric(vertical: 3),
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: const BoxDecoration(
-        // borderRadius: BorderRadius.circular(15),
-        border: Border.symmetric(
-          horizontal: BorderSide(color: Colors.black, width: 0.3),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTapUp: (details) {
+          WebRouter.navigateTo(context, "/post?id=${data["id"]}");
+          print(data["id"]);
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: const BoxDecoration(
+            border: Border.symmetric(
+              horizontal: BorderSide(color: Colors.black, width: 0.3),
+            ),
+          ),
+          height: 80,
+          child: Row(
+            children: [
+              Flexible(
+                child: Container(
+                  height: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: 15),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black.withOpacity(0.5),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Image.network(
+                    data["thumbnail"],
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                flex: 2,
+                child: Text(
+                  parsedTitle(data["title"]),
+                  style: TextStyle(
+                    fontFamily: "leeseoyoon",
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      height: 80,
-      child: Row(
-        children: [
-          Flexible(
-            child: Image.network(data["thumbnail"]),
-          ),
-          const SizedBox(width: 10),
-          Flexible(
-            flex: 2,
-            child: Text(parsedTitle(data["title"])),
-          ),
-        ],
       ),
     );
   }

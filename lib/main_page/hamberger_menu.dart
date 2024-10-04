@@ -13,7 +13,7 @@ class HambergerMenu extends StatefulWidget {
 }
 
 class _HambergerMenuState extends State<HambergerMenu> {
-  bool open = true;
+  bool open = false;
 
   void switchOpen() {
     setState(() {
@@ -24,33 +24,42 @@ class _HambergerMenuState extends State<HambergerMenu> {
   @override
   Widget build(BuildContext context) {
     double width = 300;
-    return SizedBox(
-      height: double.infinity,
-      width: width,
-      child: Stack(
-        children: [
-          AnimatedPositioned(
-            curve: Curves.easeOutQuart,
-            duration: const Duration(milliseconds: 500),
-            left: open ? 0 : -width,
-            child: Contents(width, open: open),
+    return Stack(
+      children: [
+        OutBackground(active: open, onClick: switchOpen),
+        SizedBox(
+          height: double.infinity,
+          width: width,
+          child: Stack(
+            children: [
+              AnimatedPositioned(
+                curve: Curves.easeOutQuart,
+                duration: const Duration(milliseconds: 500),
+                left: open ? 0 : -width,
+                child: Contents(width, open: open),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                child:
+                    HambergerBtn(active: open, size: 25, trigger: switchOpen),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-            child: HambergerBtn(size: 25, trigger: switchOpen),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class HambergerBtn extends StatefulWidget {
+  final bool active;
   final double size;
   final void Function() trigger;
 
   const HambergerBtn({
     super.key,
+    this.active = false,
     required this.size,
     required this.trigger,
   });
@@ -60,7 +69,6 @@ class HambergerBtn extends StatefulWidget {
 }
 
 class _HambergerBtnState extends State<HambergerBtn> {
-  bool turn = false;
   Color color = Colors.white.withOpacity(0.5);
 
   Widget stick() {
@@ -75,7 +83,6 @@ class _HambergerBtnState extends State<HambergerBtn> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapUp: (details) => setState(() {
-        turn = !turn;
         color = Colors.white.withOpacity(0.5);
         widget.trigger();
       }),
@@ -88,7 +95,7 @@ class _HambergerBtnState extends State<HambergerBtn> {
         child: AnimatedRotation(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
-          turns: turn ? 0.25 : 0,
+          turns: widget.active ? 0.25 : 0,
           child: SizedBox(
             width: widget.size + 5,
             height: widget.size,
@@ -185,7 +192,7 @@ class _ContentsState extends State<Contents> {
           physics: physics,
           child: Column(
             children: [
-              SiteLogo(size: widget.width / 7 * 4),
+              SideLogo(size: widget.width / 7 * 4),
               part(
                 title: "INFO",
                 child: InfoTile(active: widget.open),
@@ -201,6 +208,36 @@ class _ContentsState extends State<Contents> {
                 child: RecentPostList(active: widget.open),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OutBackground extends StatefulWidget {
+  final bool active;
+  final void Function() onClick;
+  const OutBackground({super.key, this.active = false, required this.onClick});
+
+  @override
+  State<OutBackground> createState() => _OutBackgroundState();
+}
+
+class _OutBackgroundState extends State<OutBackground> {
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring: !widget.active,
+      child: GestureDetector(
+        onTapUp: (details) {
+          if (widget.active) widget.onClick();
+        },
+        child: AnimatedOpacity(
+          opacity: widget.active ? 1 : 0,
+          duration: const Duration(milliseconds: 200),
+          child: Container(
+            color: Colors.black.withOpacity(0.2),
           ),
         ),
       ),
