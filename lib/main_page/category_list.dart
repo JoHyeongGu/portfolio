@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio/base_data.dart';
 import 'package:portfolio/router.dart';
-import 'package:portfolio/tool/color_list.dart';
+import 'package:portfolio/base_data.dart';
 
 class CategoryList extends StatefulWidget {
-  final bool open;
-  const CategoryList(this.open, {super.key});
+  final bool active;
+  const CategoryList({super.key, this.active = false});
 
   @override
   State<CategoryList> createState() => _CategoryListState();
@@ -31,11 +30,11 @@ class _CategoryListState extends State<CategoryList> {
   }
 
   void getData() async {
-    if (widget.open && data.isEmpty) {
+    if (widget.active && data.isEmpty) {
       data = await BaseData.of(context)!.db.getCategoryList();
     }
     setState(() {});
-    if (autoCount == 0 && widget.open && data.isNotEmpty) {
+    if (autoCount == 0 && widget.active && data.isNotEmpty) {
       await Future.delayed(const Duration(seconds: 1));
       autoScroll();
     }
@@ -45,7 +44,7 @@ class _CategoryListState extends State<CategoryList> {
     if (data.isEmpty) return;
     autoCount++;
     while (true) {
-      if (autoCount > 1 || !widget.open) {
+      if (autoCount > 1 || !widget.active) {
         autoCount--;
         break;
       }
@@ -54,7 +53,7 @@ class _CategoryListState extends State<CategoryList> {
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
-      if (autoCount > 1 || !widget.open) {
+      if (autoCount > 1 || !widget.active) {
         autoCount--;
         break;
       }
@@ -77,7 +76,7 @@ class _CategoryListState extends State<CategoryList> {
   void startAutoScroll() async {
     autoCount--;
     await Future.delayed(const Duration(seconds: 1));
-    if (autoCount == 0 && widget.open && data.isNotEmpty) {
+    if (autoCount == 0 && widget.active && data.isNotEmpty) {
       autoScroll();
     }
   }
@@ -111,11 +110,12 @@ class _CategoryListState extends State<CategoryList> {
                   ),
                 ),
         ),
-        Container(
-          width: size.width,
-          height: size.height,
-          color: Colors.black.withOpacity(0.2),
-        ),
+        if (isData)
+          Container(
+            width: size.width,
+            height: size.height,
+            color: Colors.black.withOpacity(0.2),
+          ),
         if (isData)
           SizedBox(
             width: size.width,
@@ -269,7 +269,8 @@ class _CateTextState extends State<CateText> {
             widget.enter(widget.data["index"]);
           }),
           onTapUp: (event) {
-            WebRouter.navigateTo(context, "/test?cate=${widget.data["path"]}&type=test");
+            WebRouter.navigateTo(
+                context, "/test?cate=${widget.data["path"]}&type=test");
           },
           onTapCancel: () => setState(() {
             focus = false;

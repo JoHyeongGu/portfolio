@@ -1,19 +1,21 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:portfolio/base_data.dart';
 
 class InfoTile extends StatefulWidget {
-  final bool open;
-  const InfoTile(this.open, {super.key});
+  final bool active;
+  const InfoTile({super.key, this.active = false});
 
   @override
   State<InfoTile> createState() => _InfoTileState();
 }
 
 class _InfoTileState extends State<InfoTile> {
-  var dataListener;
+  StreamSubscription<DatabaseEvent>? dataListener;
   Map infoData = {
     "user_count": 0,
     "user_total": 0,
@@ -29,20 +31,16 @@ class _InfoTileState extends State<InfoTile> {
   }
 
   Future<void> countUser() async {
-    try {
-      Uri url = Uri.parse("https://ipinfo.io/json");
-      final response = await http.get(url);
-      if (mounted && response.statusCode == 200) {
-        var db = BaseData.of(context)!.db;
-        Map user = jsonDecode(response.body);
-        if (!(await db.isUserTodayWithIp(user["ip"]))) {
-          user["last_enter"] = DateTime.now();
-          await db.realtimeUpdateUserCount();
-          await db.addUser(user);
-        }
+    Uri url = Uri.parse("https://ipinfo.io/json");
+    final response = await http.get(url);
+    if (mounted && response.statusCode == 200) {
+      var db = BaseData.of(context)!.db;
+      Map user = jsonDecode(response.body);
+      if (!(await db.isUserTodayWithIp(user["ip"]))) {
+        user["last_enter"] = DateTime.now();
+        await db.realtimeUpdateUserCount();
+        await db.addUser(user);
       }
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -54,13 +52,11 @@ class _InfoTileState extends State<InfoTile> {
 
   @override
   Widget build(BuildContext context) {
-    if (dataListener == null && widget.open) {
+    if (dataListener == null && widget.active) {
       dataListener = BaseData.of(context)!.db.listenSiteInfo(setData);
-      print("Connect Listener");
-    } else if (dataListener != null && !widget.open) {
-      dataListener.cancel();
+    } else if (dataListener != null && !widget.active) {
+      dataListener!.cancel();
       dataListener = null;
-      print("Listener Cancel");
     }
     Widget text(String key, String value) {
       return Row(
@@ -95,7 +91,7 @@ class _InfoTileState extends State<InfoTile> {
         color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(15),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

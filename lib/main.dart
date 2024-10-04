@@ -1,4 +1,3 @@
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/router.dart';
 import 'package:portfolio/base_data.dart';

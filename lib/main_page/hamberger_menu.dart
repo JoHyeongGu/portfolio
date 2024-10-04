@@ -13,7 +13,7 @@ class HambergerMenu extends StatefulWidget {
 }
 
 class _HambergerMenuState extends State<HambergerMenu> {
-  bool open = false;
+  bool open = true;
 
   void switchOpen() {
     setState(() {
@@ -23,17 +23,17 @@ class _HambergerMenuState extends State<HambergerMenu> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = 300;
+    double width = 300;
     return SizedBox(
       height: double.infinity,
-      width: _width,
+      width: width,
       child: Stack(
         children: [
           AnimatedPositioned(
             curve: Curves.easeOutQuart,
             duration: const Duration(milliseconds: 500),
-            left: open ? 0 : -_width,
-            child: Contents(_width, open: open),
+            left: open ? 0 : -width,
+            child: Contents(width, open: open),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
@@ -49,7 +49,7 @@ class HambergerBtn extends StatefulWidget {
   final double size;
   final void Function() trigger;
 
-  HambergerBtn({
+  const HambergerBtn({
     super.key,
     required this.size,
     required this.trigger,
@@ -118,46 +118,54 @@ class Contents extends StatefulWidget {
 }
 
 class _ContentsState extends State<Contents> {
-  Widget info() {
-    Widget title = Text(
-      "< INFO >",
-      style: TextStyle(
-        color: Colors.white.withOpacity(0.7),
-        fontSize: 25,
-        fontFamily: "pixel",
-        letterSpacing: 0.2,
-        fontWeight: FontWeight.bold,
-      ),
-    );
+  Widget part({
+    required String title,
+    required Widget child,
+    bool koreanSize = false,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(top: 70, bottom: 40),
+      padding: const EdgeInsets.only(bottom: 40),
       child: Column(
         children: [
-          title,
-          const SizedBox(height: 10),
-          InfoTile(widget.open),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "< ",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 25,
+                  fontFamily: "pixel",
+                  letterSpacing: 0.2,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: koreanSize ? 20 : 25,
+                  fontFamily: "pixel",
+                  letterSpacing: 0.2,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                " >",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 25,
+                  fontFamily: "pixel",
+                  letterSpacing: 0.2,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          child,
         ],
       ),
-    );
-  }
-
-  Widget category() {
-    Widget title = Text(
-      "< 카테고리 >",
-      style: TextStyle(
-        color: Colors.white.withOpacity(0.7),
-        fontSize: 22,
-        fontFamily: "pixel",
-        letterSpacing: 0.2,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-    return Column(
-      children: [
-        title,
-        const SizedBox(height: 15),
-        CategoryList(widget.open),
-      ],
     );
   }
 
@@ -177,11 +185,21 @@ class _ContentsState extends State<Contents> {
           physics: physics,
           child: Column(
             children: [
-              const SizedBox(height: 70),
               SiteLogo(size: widget.width / 7 * 4),
-              info(),
-              category(),
-              if (widget.open) RecentPostList(),
+              part(
+                title: "INFO",
+                child: InfoTile(active: widget.open),
+              ),
+              part(
+                title: "카테고리",
+                koreanSize: true,
+                child: CategoryList(active: widget.open),
+              ),
+              part(
+                title: "최근 게시물",
+                koreanSize: true,
+                child: RecentPostList(active: widget.open),
+              ),
             ],
           ),
         ),

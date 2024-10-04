@@ -6,9 +6,12 @@ class SiteLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      "assets/pixel_logo.png",
-      width: size,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 70),
+      child: Image.asset(
+        "assets/pixel_logo.png",
+        width: size,
+      ),
     );
   }
 }

@@ -40,7 +40,6 @@ class TestWidget extends StatefulWidget {
 class _TestWidgetState extends State<TestWidget> {
   @override
   Widget build(BuildContext context) {
-    print("Test 위젯 빌드!!");
     return Text(widget.txt);
   }
 }

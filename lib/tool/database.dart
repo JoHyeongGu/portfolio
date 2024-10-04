@@ -18,7 +18,6 @@ class Database {
       });
       index++;
     }
-    print("Get Data in Category Collection");
     return result;
   }
 
@@ -29,7 +28,6 @@ class Database {
         .docs
         .map((doc) => {"id": doc.id, ...(doc.data() as Map)})
         .toList();
-    print("Get Data in Post List Top 10");
     return datas;
   }
 
@@ -41,7 +39,6 @@ class Database {
         .where('last_enter', isGreaterThanOrEqualTo: today)
         .where("ip", isEqualTo: ip)
         .get();
-    print("Checked User IP is in DB...");
     return data.docs.isNotEmpty;
   }
 
@@ -50,10 +47,8 @@ class Database {
     var data = await col.where("ip", isEqualTo: user["ip"]).get();
     if (data.docs.isNotEmpty) {
       col.doc(data.docs[0].id).update({"last_enter": user["last_enter"]});
-      print("Update User Data");
     } else {
       await col.add(user);
-      print("Post User Data");
     }
   }
 
@@ -73,6 +68,5 @@ class Database {
       await rtDb.ref("last_date").set(today);
     }
     await rtDb.ref("site_info/user_total").set(info["user_total"] + 1);
-    print("Update User Count");
   }
 }
