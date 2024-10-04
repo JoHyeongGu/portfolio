@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio/main_lobby/category_list.dart';
-import 'package:portfolio/main_lobby/info_tile.dart';
-import 'package:portfolio/main_lobby/logo.dart';
+import 'package:portfolio/main_page/category_list.dart';
+import 'package:portfolio/main_page/info_tile.dart';
+import 'package:portfolio/main_page/logo.dart';
+import 'package:portfolio/main_page/recent_post_list.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 class HambergerMenu extends StatefulWidget {
@@ -29,8 +30,8 @@ class _HambergerMenuState extends State<HambergerMenu> {
       child: Stack(
         children: [
           AnimatedPositioned(
-            curve: Curves.easeInOut,
-            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutQuart,
+            duration: const Duration(milliseconds: 500),
             left: open ? 0 : -_width,
             child: Contents(_width, open: open),
           ),
@@ -169,7 +170,7 @@ class _ContentsState extends State<Contents> {
       padding: const EdgeInsets.symmetric(vertical: 30),
       child: DynMouseScroll(
         durationMS: 1000,
-        scrollSpeed: 2,
+        scrollSpeed: 1,
         animationCurve: Curves.easeOutQuart,
         builder: (context, controller, physics) => SingleChildScrollView(
           controller: controller,
@@ -180,6 +181,7 @@ class _ContentsState extends State<Contents> {
               SiteLogo(size: widget.width / 7 * 4),
               info(),
               category(),
+              if (widget.open) RecentPostList(),
             ],
           ),
         ),

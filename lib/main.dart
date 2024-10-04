@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         title: "조앤디어: 조씨의 좋은 아이디어 저장소",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: BANNER_COLOR),
+          colorScheme: ColorScheme.fromSeed(seedColor: COLOR_GREEN),
           useMaterial3: true,
         ),
         onGenerateRoute: WebRouter.router.generator,

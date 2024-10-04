@@ -90,7 +90,7 @@ class _CategoryListState extends State<CategoryList> {
           width: size.width,
           height: size.height,
           decoration: BoxDecoration(
-            color: BANNER_COLOR,
+            color: Colors.black.withOpacity(0.4),
             borderRadius: BorderRadius.circular(15),
           ),
           child: isData

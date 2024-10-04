@@ -1,34 +1,36 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/firebase_database.dart' as realtime;
 
 class Database {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  FirebaseDatabase rtDb = FirebaseDatabase.instance;
+  realtime.FirebaseDatabase rtDb = realtime.FirebaseDatabase.instance;
 
-  // TOOL
-  List<Map> mapToList(Map from) {
+  Future<List<Map>> getCategoryList() async {
+    CollectionReference col = db.collection("category");
     List<Map> result = [];
     int index = 0;
-    for (MapEntry e in from.entries) {
-      Map data = e.value;
-      data["id"] = e.key;
-      data["index"] = index;
+    for (var doc in (await col.get()).docs) {
+      result.add({
+        "id": doc.id,
+        "index": index,
+        ...(doc.data() as Map),
+      });
       index++;
-      result.add(data);
     }
+    print("Get Data in Category Collection");
     return result;
   }
 
-  // CRUD
-  Future<List<Map>> getCategoryList() async {
-    CollectionReference col = db.collection("category");
-    Map data = {};
-    for (var doc in (await col.get()).docs) {
-      data[doc.id] = doc.data();
-    }
-    print("Get Data in Category Collection");
-    return mapToList(data);
+  Future<List<Map>> getRecentPostList() async {
+    CollectionReference col = db.collection("post_list");
+    Query query = col.orderBy("updated_at", descending: true).limit(5);
+    List<Map> datas = (await query.get())
+        .docs
+        .map((doc) => {"id": doc.id, ...(doc.data() as Map)})
+        .toList();
+    print("Get Data in Post List Top 10");
+    return datas;
   }
 
   Future<bool> isUserTodayWithIp(String ip) async {
@@ -55,8 +57,9 @@ class Database {
     }
   }
 
-  StreamSubscription<DatabaseEvent> listenSiteInfo(void Function(DatabaseEvent) listener) {
-    Stream<DatabaseEvent> stream = rtDb.ref("site_info").onValue;
+  StreamSubscription<realtime.DatabaseEvent> listenSiteInfo(
+      void Function(realtime.DatabaseEvent) listener) {
+    Stream<realtime.DatabaseEvent> stream = rtDb.ref("site_info").onValue;
     return stream.listen(listener);
   }
 

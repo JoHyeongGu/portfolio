@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/tool/color_list.dart';
 import 'hamberger_menu.dart';
 
 class MainPage extends StatefulWidget {
@@ -10,7 +11,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   Widget background = Container(
-    color: const Color.fromRGBO(30, 43, 37, 1.0),
+    color: COLOR_GREEN,
   );
 
   @override
