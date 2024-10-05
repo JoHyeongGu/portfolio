@@ -33,7 +33,7 @@ class BackgroundContent extends StatelessWidget {
   Widget searchBar() {
     return Container(
       height: 25,
-      width: 280,
+      width: 300,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),

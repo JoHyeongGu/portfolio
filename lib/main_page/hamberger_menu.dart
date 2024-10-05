@@ -3,10 +3,12 @@ import 'package:portfolio/main_page/category_list.dart';
 import 'package:portfolio/main_page/info_tile.dart';
 import 'package:portfolio/main_page/logo.dart';
 import 'package:portfolio/main_page/recent_post_list.dart';
+import 'package:portfolio/tool/color_list.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 class HambergerMenu extends StatefulWidget {
-  const HambergerMenu({super.key});
+  final bool opacity;
+  const HambergerMenu({super.key, this.opacity = true});
 
   @override
   State<HambergerMenu> createState() => _HambergerMenuState();
@@ -36,7 +38,11 @@ class _HambergerMenuState extends State<HambergerMenu> {
                 curve: Curves.easeOutQuart,
                 duration: const Duration(milliseconds: 500),
                 left: open ? 0 : -width,
-                child: Contents(width, open: open),
+                child: Contents(
+                  width,
+                  open: open,
+                  opacity: widget.opacity,
+                ),
               ),
               Padding(
                 padding:
@@ -118,7 +124,13 @@ class _HambergerBtnState extends State<HambergerBtn> {
 class Contents extends StatefulWidget {
   final bool open;
   final double width;
-  const Contents(this.width, {super.key, required this.open});
+  final bool opacity;
+  const Contents(
+    this.width, {
+    super.key,
+    required this.open,
+    this.opacity = true,
+  });
 
   @override
   State<Contents> createState() => _ContentsState();
@@ -179,7 +191,7 @@ class _ContentsState extends State<Contents> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.4),
+      color: widget.opacity ? Colors.black.withOpacity(0.4) : COLOR_GREEN,
       width: widget.width,
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(vertical: 30),

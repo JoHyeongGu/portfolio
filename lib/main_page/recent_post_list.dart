@@ -42,8 +42,8 @@ class _RecentPostListState extends State<RecentPostList> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTapUp: (details) {
+          BaseData.of(context)!.saveData("post_data", data);
           WebRouter.navigateTo(context, "/post?id=${data["id"]}");
-          print(data["id"]);
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),

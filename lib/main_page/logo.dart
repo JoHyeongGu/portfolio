@@ -49,14 +49,9 @@ class _MainLogoState extends State<MainLogo> {
         curve: Curves.easeInOut,
         duration: const Duration(seconds: 1),
         padding: padding ? const EdgeInsets.only(top: 10) : EdgeInsets.zero,
-        child: const Text(
-          "Jo'NDEA",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 55,
-            letterSpacing: 0.1,
-            fontFamily: "pixel",
-          ),
+        child: Image.asset(
+          "assets/main_text_logo.png",
+          width: 200,
         ),
       ),
     );
