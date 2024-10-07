@@ -11,15 +11,26 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  Widget background = Container(
-    color: COLOR_GREEN,
-  );
+  Widget background() {
+    return Container(
+      color: COLOR_GREEN,
+      width: double.infinity,
+      height: double.infinity,
+      child: Opacity(
+        opacity: 0.4,
+        child: Image.asset(
+          "assets/drop_idea.gif",
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        background,
+        background(),
         const BackgroundContent(),
         const HambergerMenu(),
       ],
