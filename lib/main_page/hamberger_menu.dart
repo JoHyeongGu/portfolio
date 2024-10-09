@@ -4,6 +4,7 @@ import 'package:portfolio/main_page/info_tile.dart';
 import 'package:portfolio/main_page/logo.dart';
 import 'package:portfolio/main_page/recent_post_list.dart';
 import 'package:portfolio/tool/color_list.dart';
+import 'package:portfolio/tool/tool_widgets.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 class HambergerMenu extends StatefulWidget {
@@ -75,7 +76,7 @@ class HambergerBtn extends StatefulWidget {
 }
 
 class _HambergerBtnState extends State<HambergerBtn> {
-  Color color = Colors.white.withOpacity(0.5);
+  Color color = Colors.white;
 
   Widget stick() {
     return Container(
@@ -89,11 +90,11 @@ class _HambergerBtnState extends State<HambergerBtn> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapUp: (details) => setState(() {
-        color = Colors.white.withOpacity(0.5);
+        color = Colors.white;
         widget.trigger();
       }),
       onTapDown: (details) => setState(() {
-        color = Colors.grey.withOpacity(0.5);
+        color = Colors.grey;
       }),
       child: Container(
         color: Colors.transparent,
@@ -149,10 +150,10 @@ class _ContentsState extends State<Contents> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "< ",
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white,
                   fontSize: 25,
                   fontFamily: "pixel",
                   letterSpacing: 0.2,
@@ -162,17 +163,17 @@ class _ContentsState extends State<Contents> {
               Text(
                 title,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white,
                   fontSize: koreanSize ? 20 : 25,
                   fontFamily: "pixel",
                   letterSpacing: 0.2,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
+              const Text(
                 " >",
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white,
                   fontSize: 25,
                   fontFamily: "pixel",
                   letterSpacing: 0.2,
@@ -195,32 +196,25 @@ class _ContentsState extends State<Contents> {
       width: widget.width,
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(vertical: 30),
-      child: DynMouseScroll(
-        durationMS: 1000,
-        scrollSpeed: 1,
-        animationCurve: Curves.easeOutQuart,
-        builder: (context, controller, physics) => SingleChildScrollView(
-          controller: controller,
-          physics: physics,
-          child: Column(
-            children: [
-              SideLogo(size: widget.width / 7 * 4),
-              part(
-                title: "INFO",
-                child: InfoTile(active: widget.open),
-              ),
-              part(
-                title: "카테고리",
-                koreanSize: true,
-                child: CategoryList(active: widget.open),
-              ),
-              part(
-                title: "최근 게시물",
-                koreanSize: true,
-                child: RecentPostList(active: widget.open),
-              ),
-            ],
-          ),
+      child: smoothScroll(
+        child: Column(
+          children: [
+            SideLogo(size: widget.width / 7 * 4),
+            part(
+              title: "INFO",
+              child: InfoTile(active: widget.open),
+            ),
+            part(
+              title: "카테고리",
+              koreanSize: true,
+              child: CategoryList(active: widget.open),
+            ),
+            part(
+              title: "최근 게시물",
+              koreanSize: true,
+              child: RecentPostList(active: widget.open),
+            ),
+          ],
         ),
       ),
     );

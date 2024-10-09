@@ -13,9 +13,19 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   Widget background() {
     return Container(
-      color: COLOR_GREEN,
       width: double.infinity,
       height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black,
+            ...List.filled(5, COLOR_GREEN),
+            Colors.black,
+          ],
+        ),
+      ),
       child: Opacity(
         opacity: 0.4,
         child: Image.asset(

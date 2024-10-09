@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
 import 'package:portfolio/main_page/hamberger_menu.dart';
 import 'package:portfolio/tool/color_list.dart';
-import 'package:portfolio/tool/loading.dart';
-import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+import 'package:portfolio/tool/tool_widgets.dart';
 
 class PostPage extends StatefulWidget {
   final Map params;
@@ -103,26 +102,18 @@ class _PostPageState extends State<PostPage> {
         //   color: Colors.brown,
         // ),
       ),
-      DynMouseScroll(
-        durationMS: 1000,
-        scrollSpeed: 1,
-        animationCurve: Curves.easeOutQuart,
-        builder: (context, controller, physics) => SingleChildScrollView(
-          controller: controller,
-          physics: physics,
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight:
-                  MediaQuery.of(context).size.width - thumbnailHeight - 15,
-            ),
-            margin: EdgeInsets.only(top: thumbnailHeight),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: COLOR_IVORY,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: data != null ? PostContents(data!["content"]) : Container(),
+      smoothScroll(
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.width - thumbnailHeight - 15,
           ),
+          margin: EdgeInsets.only(top: thumbnailHeight),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: COLOR_IVORY,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: data != null ? PostContents(data!["content"]) : Container(),
         ),
       ),
     ];
