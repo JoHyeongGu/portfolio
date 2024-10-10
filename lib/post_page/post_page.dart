@@ -1,8 +1,11 @@
+import 'content_widget_dict.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
-import 'package:portfolio/main_page/hamberger_menu.dart';
 import 'package:portfolio/tool/color_list.dart';
 import 'package:portfolio/tool/tool_widgets.dart';
+import 'package:portfolio/main_page/hamberger_menu.dart';
+
+import 'post_contents.dart';
 
 class PostPage extends StatefulWidget {
   final Map params;
@@ -96,11 +99,6 @@ class _PostPageState extends State<PostPage> {
             ),
           ),
         ),
-        // child: const Loading(
-        //   alignment: Alignment.topCenter,
-        //   edgeInsets: EdgeInsets.only(top: 30),
-        //   color: Colors.brown,
-        // ),
       ),
       smoothScroll(
         child: Container(
@@ -113,6 +111,7 @@ class _PostPageState extends State<PostPage> {
             color: COLOR_IVORY,
             borderRadius: BorderRadius.circular(15),
           ),
+          padding: const EdgeInsets.only(bottom: 50),
           child: data != null ? PostContents(data!["content"]) : Container(),
         ),
       ),
@@ -139,75 +138,6 @@ class _PostPageState extends State<PostPage> {
         ...contents(),
         ...menu,
       ],
-    );
-  }
-}
-
-class PostContents extends StatelessWidget {
-  final String contents;
-  const PostContents(this.contents, {super.key});
-
-  Widget text(String c) {
-    return Text(
-      c,
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 15,
-      ),
-    );
-  }
-
-  Widget image(String c) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Image.network(c.replaceAll("<img>", "")),
-    );
-  }
-
-  Widget code(String c) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 45),
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Theme(
-        data: ThemeData(
-          textSelectionTheme: const TextSelectionThemeData(
-            selectionColor: Colors.green,
-          ),
-        ),
-        child: SelectableText(
-          c.replaceAll("<code>", "").replaceAll("\\n", "\n"),
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget token(String c) {
-    if (c.contains("<img>")) {
-      return image(c);
-    } else if (c.contains("<code>")) {
-      return code(c);
-    } else {
-      return text(c);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 30,
-        horizontal: 10,
-      ),
-      child: Column(
-        children: contents.split("<n>").map((c) => token(c)).toList(),
-      ),
     );
   }
 }

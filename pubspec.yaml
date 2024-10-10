@@ -14,12 +14,15 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   firebase_core: ^3.5.0
-  cloud_firestore: ^5.4.2
+  cloud_firestore: ^5.4.4
   fluro: ^2.0.5
   url_strategy: ^0.3.0
   smooth_scroll_multiplatform: ^1.0.8
   firebase_database: ^11.1.4
   http: ^1.2.2
+  collection: ^1.18.0
+  web: ^1.1.0
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:
