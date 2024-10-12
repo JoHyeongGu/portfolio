@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
           end: Alignment.bottomCenter,
           colors: [
             Colors.black,
-            ...List.filled(5, COLOR_GREEN),
+            ...List.filled(5, fixColorGreen),
             Colors.black,
           ],
         ),
@@ -65,7 +65,7 @@ class BackgroundContent extends StatelessWidget {
             iconSize: 17,
             padding: EdgeInsets.zero,
             onPressed: () {
-              print("search");
+              // execute searching Process
             },
             icon: const Icon(Icons.search),
           ),

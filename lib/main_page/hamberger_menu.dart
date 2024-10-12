@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio/main_page/category_list.dart';
-import 'package:portfolio/main_page/info_tile.dart';
 import 'package:portfolio/main_page/logo.dart';
-import 'package:portfolio/main_page/recent_post_list.dart';
 import 'package:portfolio/tool/color_list.dart';
 import 'package:portfolio/tool/tool_widgets.dart';
-import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+import 'package:portfolio/main_page/info_tile.dart';
+import 'package:portfolio/main_page/category_list.dart';
+import 'package:portfolio/main_page/recent_post_list.dart';
 
 class HambergerMenu extends StatefulWidget {
   final bool opacity;
@@ -192,7 +191,7 @@ class _ContentsState extends State<Contents> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: widget.opacity ? Colors.black.withOpacity(0.4) : COLOR_GREEN,
+      color: widget.opacity ? Colors.black.withOpacity(0.4) : fixColorGreen,
       width: widget.width,
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(vertical: 30),

@@ -32,7 +32,6 @@ class Database {
   }
 
   Future<Map<String, dynamic>?> getPostDataById(String id) async {
-    print("Get Data in Post Detail");
     return (await db.collection("post_list").doc(id).get()).data();
   }
 

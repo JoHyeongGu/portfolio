@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' show Document;
 import 'package:html/parser.dart' show parse;
+import 'package:portfolio/tool/tool_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+const String corsUrl = "https://corsproxy.io/?";
 
 Widget text(String txt) {
   TextStyle style = const TextStyle(
@@ -49,8 +54,8 @@ Widget code(String txt) {
 
 Widget image(String txt) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10),
-    child: Image.network(txt),
+    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+    child: Image.network(corsUrl + txt),
   );
 }
 
@@ -85,8 +90,9 @@ Widget link(String txt) {
     String? description;
     String? img;
     try {
-      final response = await http.get(Uri.parse(txt));
-      print("Complete $txt Get");
+      final response = await http.get(
+        Uri.parse(corsUrl + txt),
+      );
       if (response.statusCode == 200) {
         Document doc = parse(response.body);
         var titleTag = doc.querySelector("title");
@@ -96,34 +102,48 @@ Widget link(String txt) {
         var descriptionTag = doc.querySelector("meta[name='description']");
         if (descriptionTag != null) {
           description = descriptionTag.attributes["content"];
+          if (description != null && description.length > 100) {
+            description = "${description.substring(0, 100)}...";
+          }
         }
         var imgTag = doc.querySelector("meta[property*='image']");
         if (imgTag != null) {
-          img = imgTag.attributes["content"];
+          img = imgTag.attributes["content"]!;
         }
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (_) {}
     return {
-      "url": txt,
       "title": title,
       "description": description,
-      "img": img,
+      "img": img != null ? "https://corsproxy.io/?$img" : null,
     };
   }
 
-  return FutureBuilder(
-    future: getData(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
-      } else if (snapshot.hasData) {
-        Map<String, String?> data = snapshot.data as Map<String, String?>;
-        print(data);
-        return Container(
-          margin: EdgeInsets.symmetric(vertical: 15),
-          width: MediaQuery.of(context).size.width / 2,
+  Widget nodata() {
+    return Linkify(
+      text: txt,
+      onOpen: (link) async {
+        if (!await launchUrl(Uri.parse(link.url))) {
+          throw Exception('Could not launch ${link.url}');
+        }
+      },
+      style: const TextStyle(fontWeight: FontWeight.bold),
+      linkStyle: const TextStyle(color: Colors.green),
+    );
+  }
+
+  Widget linkBox(BuildContext context, Map<String, String?> data) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTapUp: (details) async {
+          if (!await launchUrl(Uri.parse(txt))) {
+            throw Exception('Could not launch $txt');
+          }
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 15),
+          width: MediaQuery.of(context).size.width / 2.3,
           height: 100,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.9),
@@ -131,30 +151,67 @@ Widget link(String txt) {
           ),
           child: Row(
             children: [
-              if (data["img"] != null)
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Image.network(
-                      data["img"]!,
+              data["img"] != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: SizedBox(
+                        width: 100,
+                        height: 200,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.network(
+                            data["img"]!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.all(15),
+                      width: 100,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
-                  ),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data["title"]!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      data["description"]!,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
                 ),
-              if (data["title"] != null)
-                Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(data["title"]!),
-                      Text(data["description"]!.substring(0, 100)),
-                    ],
-                  ),
-                )
+              )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  return FutureBuilder(
+    future: getData(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return loadingWidget(
+          color: Colors.brown,
+          edgeInsets: const EdgeInsets.symmetric(vertical: 30),
         );
+      } else if (snapshot.hasData) {
+        Map<String, String?> data = snapshot.data as Map<String, String?>;
+        return data["title"] == null ? nodata() : linkBox(context, data);
       } else {
         return Container();
       }

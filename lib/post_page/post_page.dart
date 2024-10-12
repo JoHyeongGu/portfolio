@@ -1,11 +1,9 @@
-import 'content_widget_dict.dart';
+import 'post_contents.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
 import 'package:portfolio/tool/color_list.dart';
 import 'package:portfolio/tool/tool_widgets.dart';
 import 'package:portfolio/main_page/hamberger_menu.dart';
-
-import 'post_contents.dart';
 
 class PostPage extends StatefulWidget {
   final Map params;
@@ -108,7 +106,7 @@ class _PostPageState extends State<PostPage> {
           margin: EdgeInsets.only(top: thumbnailHeight),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: COLOR_IVORY,
+            color: fixColorIvory,
             borderRadius: BorderRadius.circular(15),
           ),
           padding: const EdgeInsets.only(bottom: 50),
@@ -122,7 +120,7 @@ class _PostPageState extends State<PostPage> {
     Container(
       height: 75,
       decoration: BoxDecoration(
-        color: COLOR_GREEN.withOpacity(0.9),
+        color: fixColorGreen.withOpacity(0.9),
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(15)),
       ),
     ),

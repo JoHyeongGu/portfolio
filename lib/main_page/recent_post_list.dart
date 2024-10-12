@@ -58,7 +58,7 @@ class _RecentPostListState extends State<RecentPostList> {
               Flexible(
                 child: Container(
                   height: double.infinity,
-                  margin: EdgeInsets.symmetric(vertical: 15),
+                  margin: const EdgeInsets.symmetric(vertical: 15),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.black.withOpacity(0.5),
@@ -76,7 +76,7 @@ class _RecentPostListState extends State<RecentPostList> {
                 flex: 2,
                 child: Text(
                   parsedTitle(data["title"]),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: "leeseoyoon",
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -97,7 +97,7 @@ class _RecentPostListState extends State<RecentPostList> {
       margin: const EdgeInsets.symmetric(horizontal: 45),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: COLOR_IVORY,
+        color: fixColorIvory,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
