@@ -218,3 +218,53 @@ Widget link(String txt) {
     },
   );
 }
+
+class SummeryTable extends StatefulWidget {
+  final String content;
+  const SummeryTable(this.content, {super.key});
+
+  @override
+  State<SummeryTable> createState() => _SummeryTableState();
+}
+
+class _SummeryTableState extends State<SummeryTable> {
+  late Iterable<RegExpMatch> tags;
+
+  Widget tile(RegExpMatch e) {
+    String part = widget.content.substring(e.start, e.end);
+    bool big = part.contains("<t1>");
+    return Padding(
+      padding: big ? EdgeInsets.zero : const EdgeInsets.only(left: 20),
+      child: Text(
+        part.split(">")[1].split("<")[0],
+        style: TextStyle(
+          fontSize: big ? 15 : 13,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tags = RegExp(r"<t(.*?)>(.*?)</t(.*?)>").allMatches(widget.content);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.brown.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+      width: MediaQuery.of(context).size.width / 2.5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: tags.map((RegExpMatch e) => tile(e)).toList(),
+      ),
+    );
+  }
+}

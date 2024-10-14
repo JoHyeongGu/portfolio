@@ -110,7 +110,7 @@ class _PostPageState extends State<PostPage> {
             borderRadius: BorderRadius.circular(15),
           ),
           padding: const EdgeInsets.only(bottom: 50),
-          child: data != null ? PostContents(data!["content"]) : Container(),
+          child: data != null ? PostContents(data!) : null,
         ),
       ),
     ];
