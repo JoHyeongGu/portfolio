@@ -22,16 +22,23 @@ Widget text(String txt) {
       spanList.add(TextSpan(text: word.value, style: boldStyle));
     }
   }
-  return RichText(
-    textAlign: TextAlign.center,
-    text: TextSpan(children: spanList),
+  return Theme(
+    data: ThemeData(
+      textSelectionTheme: const TextSelectionThemeData(
+        selectionColor: Colors.yellow,
+      ),
+    ),
+    child: SelectableText.rich(
+      TextSpan(children: spanList),
+      textAlign: TextAlign.start,
+    ),
   );
 }
 
 Widget code(String txt) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-    padding: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 45),
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 50),
     decoration: BoxDecoration(
       color: Colors.black,
       borderRadius: BorderRadius.circular(5),
@@ -54,7 +61,7 @@ Widget code(String txt) {
 
 Widget image(String txt) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
     child: Image.network(corsUrl + txt),
   );
 }
@@ -64,23 +71,34 @@ Widget t1(String txt) {
     fontSize: 35,
     fontFamily: "magicpen",
   );
-  return SizedBox(
-    height: 58,
-    child: Padding(
-      padding: const EdgeInsets.only(top: 15, bottom: 5),
-      child: Text(txt, style: style),
+  return Padding(
+    padding: const EdgeInsets.only(top: 20),
+    child: Theme(
+      data: ThemeData(
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: Colors.yellow,
+        ),
+      ),
+      child: SelectableText(txt, style: style),
     ),
   );
 }
 
 Widget t2(String txt) {
   TextStyle style = const TextStyle(
-    fontSize: 22,
+    fontSize: 25,
     fontFamily: "magicpen",
   );
   return Padding(
     padding: const EdgeInsets.only(top: 10, bottom: 5),
-    child: Text(txt, style: style),
+    child: Theme(
+      data: ThemeData(
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: Colors.yellow,
+        ),
+      ),
+      child: SelectableText(txt, style: style),
+    ),
   );
 }
 
@@ -143,7 +161,6 @@ Widget link(String txt) {
         },
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 15),
-          width: MediaQuery.of(context).size.width / 2.3,
           height: 100,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.9),
@@ -258,12 +275,28 @@ class _SummeryTableState extends State<SummeryTable> {
         color: Colors.brown.withOpacity(0.6),
         borderRadius: BorderRadius.circular(15),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 30),
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-      width: MediaQuery.of(context).size.width / 2.5,
+      margin: const EdgeInsets.only(top: 50, bottom: 80, right: 20, left: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: tags.map((RegExpMatch e) => tile(e)).toList(),
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "< 목차 >",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "magicpen",
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ...tags.map((RegExpMatch e) => tile(e)),
+        ],
       ),
     );
   }

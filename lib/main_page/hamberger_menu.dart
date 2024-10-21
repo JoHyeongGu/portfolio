@@ -25,7 +25,7 @@ class _HambergerMenuState extends State<HambergerMenu> {
 
   @override
   Widget build(BuildContext context) {
-    double width = 300;
+    double width = MediaQuery.of(context).size.width / 6;
     return Stack(
       children: [
         OutBackground(active: open, onClick: switchOpen),
@@ -48,7 +48,7 @@ class _HambergerMenuState extends State<HambergerMenu> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child:
-                    HambergerBtn(active: open, size: 25, trigger: switchOpen),
+                    HambergerBtn(active: open, size: 20, trigger: switchOpen),
               ),
             ],
           ),
@@ -153,7 +153,7 @@ class _ContentsState extends State<Contents> {
                 "< ",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 20,
                   fontFamily: "pixel",
                   letterSpacing: 0.2,
                   fontWeight: FontWeight.bold,
@@ -163,7 +163,7 @@ class _ContentsState extends State<Contents> {
                 title,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: koreanSize ? 20 : 25,
+                  fontSize: koreanSize ? 15 : 20,
                   fontFamily: "pixel",
                   letterSpacing: 0.2,
                   fontWeight: FontWeight.bold,
@@ -173,7 +173,7 @@ class _ContentsState extends State<Contents> {
                 " >",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 20,
                   fontFamily: "pixel",
                   letterSpacing: 0.2,
                   fontWeight: FontWeight.bold,
@@ -194,7 +194,7 @@ class _ContentsState extends State<Contents> {
       color: widget.opacity ? Colors.black.withOpacity(0.4) : fixColorGreen,
       width: widget.width,
       height: MediaQuery.of(context).size.height,
-      padding: const EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
       child: smoothScroll(
         child: Column(
           children: [

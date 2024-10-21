@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/router.dart';
 
 class SideLogo extends StatelessWidget {
   final double size;
@@ -8,9 +9,14 @@ class SideLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 70),
-      child: Image.asset(
-        "assets/pixel_logo.png",
-        width: size,
+      child: GestureDetector(
+        onTapUp: (details) {
+          WebRouter.navigateTo(context, "/");
+        },
+        child: Image.asset(
+          "assets/pixel_logo.png",
+          width: size,
+        ),
       ),
     );
   }

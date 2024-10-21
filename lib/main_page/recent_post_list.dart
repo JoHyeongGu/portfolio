@@ -94,7 +94,7 @@ class _RecentPostListState extends State<RecentPostList> {
   Widget build(BuildContext context) {
     getDatas();
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 45),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       width: double.infinity,
       decoration: BoxDecoration(
         color: fixColorIvory,

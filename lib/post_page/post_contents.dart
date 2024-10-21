@@ -84,8 +84,12 @@ class PostContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+      padding: EdgeInsets.symmetric(
+        vertical: 30,
+        horizontal: MediaQuery.of(context).size.width / 5,
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           widgetDate(),
           tableSummery(),
