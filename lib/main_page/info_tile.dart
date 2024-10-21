@@ -59,28 +59,31 @@ class _InfoTileState extends State<InfoTile> {
       dataListener = null;
     }
     Widget text(String key, String value) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            key,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontFamily: "dangdang",
-              fontSize: 14,
-              wordSpacing: 0.2,
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              key,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontFamily: "dangdang",
+                fontSize: 12,
+                wordSpacing: 0.2,
+              ),
             ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontFamily: "dangdang",
-              fontSize: 14,
-              wordSpacing: 0.2,
+            Text(
+              value,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontFamily: "dangdang",
+                fontSize: 12,
+                wordSpacing: 0.2,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
 

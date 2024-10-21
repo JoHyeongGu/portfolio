@@ -25,14 +25,12 @@ class _PostPageState extends State<PostPage> {
     BaseData base = BaseData.of(context)!;
     Map? savedData = base.getData("post_data");
     if (savedData != null) {
-      setState(() {
-        data = savedData;
-      });
+      data = savedData;
     } else {
       String id = widget.params["id"][0];
       data = await base.db.getPostDataById(id);
-      setState(() {});
     }
+    setState(() {});
   }
 
   List<Widget> thumbnail() {

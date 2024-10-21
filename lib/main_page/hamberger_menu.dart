@@ -146,40 +146,43 @@ class _ContentsState extends State<Contents> {
       padding: const EdgeInsets.only(bottom: 40),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "< ",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: "pixel",
-                  letterSpacing: 0.2,
-                  fontWeight: FontWeight.bold,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "< ",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: "pixel",
+                    letterSpacing: 0.2,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: koreanSize ? 15 : 20,
-                  fontFamily: "pixel",
-                  letterSpacing: 0.2,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: koreanSize ? 15 : 20,
+                    fontFamily: "pixel",
+                    letterSpacing: 0.2,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const Text(
-                " >",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: "pixel",
-                  letterSpacing: 0.2,
-                  fontWeight: FontWeight.bold,
+                const Text(
+                  " >",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: "pixel",
+                    letterSpacing: 0.2,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 15),
           child,

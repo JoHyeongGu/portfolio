@@ -23,7 +23,10 @@ class Database {
 
   Future<List<Map>> getRecentPostList() async {
     CollectionReference col = db.collection("post_list");
-    Query query = col.orderBy("updated_at", descending: true).limit(5);
+    Query query = col
+        .orderBy("created_at", descending: true)
+        .orderBy("updated_at", descending: true)
+        .limit(5);
     List<Map> datas = (await query.get())
         .docs
         .map((doc) => {"id": doc.id, ...(doc.data() as Map)})
@@ -33,6 +36,27 @@ class Database {
 
   Future<Map<String, dynamic>?> getPostDataById(String id) async {
     return (await db.collection("post_list").doc(id).get()).data();
+  }
+
+  Future<List<Map>> getPostListByCategoryId(String id) async {
+    CollectionReference col = db.collection("post_list");
+    Query query = col
+        .where("category_id", arrayContains: id)
+        .orderBy("created_at", descending: true)
+        .orderBy("updated_at", descending: true);
+    List<Map> datas = (await query.get())
+        .docs
+        .map((doc) => {"id": doc.id, ...(doc.data() as Map)})
+        .toList();
+    return datas;
+  }
+
+  Future<Map<String, dynamic>?> getCategoryByPath(String path) async {
+    CollectionReference col = db.collection("category");
+    QuerySnapshot snapshot = await col.where("path", isEqualTo: path).get();
+    if (snapshot.docs.isEmpty) return null;
+    QueryDocumentSnapshot doc = snapshot.docs[0];
+    return {"id": doc.id, ...(doc.data() as Map)};
   }
 
   Future<bool> isUserTodayWithIp(String ip) async {

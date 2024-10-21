@@ -82,57 +82,64 @@ class _CategoryListState extends State<CategoryList> {
   }
 
   Widget tile({Map? data, bool isData = true}) {
-    return Stack(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(right: 15),
-          width: size.width,
-          height: size.height,
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: isData
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    data!["thumbnail"],
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : Opacity(
-                  opacity: 0.7,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Center(
-                      child: Image.asset("assets/thinking_hat.png"),
+    return GestureDetector(
+      onTapUp: (details) {
+        if (data == null || !isData) return;
+        BaseData.of(context)!.saveData("cate_data", data);
+        WebRouter.navigateTo(context, "/category?type=${data["path"]}");
+      },
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 15),
+            width: size.width,
+            height: size.height,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: isData
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      data!["thumbnail"],
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Opacity(
+                    opacity: 0.7,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Center(
+                        child: Image.asset("assets/thinking_hat.png"),
+                      ),
                     ),
                   ),
-                ),
-        ),
-        if (isData)
-          Container(
-            width: size.width,
-            height: size.height,
-            color: Colors.black.withOpacity(0.2),
           ),
-        if (isData)
-          SizedBox(
-            width: size.width,
-            height: size.height,
-            child: Center(
-              child: Text(
-                data!["title"].toString().replaceAll(" ", "\n"),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: "pixel",
-                  fontSize: 35,
+          if (isData)
+            Container(
+              width: size.width,
+              height: size.height,
+              color: Colors.black.withOpacity(0.2),
+            ),
+          if (isData)
+            SizedBox(
+              width: size.width,
+              height: size.height,
+              child: Center(
+                child: Text(
+                  data!["title"].toString().replaceAll(" ", "\n"),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: "pixel",
+                    fontSize: 35,
+                  ),
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -269,6 +276,7 @@ class _CateTextState extends State<CateText> {
             widget.enter(widget.data["index"]);
           }),
           onTapUp: (event) {
+            BaseData.of(context)!.saveData("cate_data", widget.data);
             WebRouter.navigateTo(
                 context, "/category?type=${widget.data["path"]}");
           },
