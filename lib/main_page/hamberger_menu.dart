@@ -194,7 +194,7 @@ class _ContentsState extends State<Contents> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: widget.opacity ? Colors.black.withOpacity(0.4) : fixColorGreen,
+      color: widget.opacity ? Colors.black.withOpacity(0.4) : fixColorGreen.withOpacity(0.95),
       width: widget.width,
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),

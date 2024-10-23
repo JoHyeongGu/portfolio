@@ -55,3 +55,6 @@ flutter:
     - family: dangdang
       fonts:
         - asset: assets/fonts/Cafe24Dangdanghae-v2.0.ttf
+    - family: noonnuGodic
+      fonts:
+        - asset: assets/fonts/NoonnuBasicGothicRegular.ttf

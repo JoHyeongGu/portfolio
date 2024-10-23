@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/base_data.dart';
-import 'package:portfolio/category_page/logo.dart';
 import 'package:portfolio/tool/color_list.dart';
+import 'package:portfolio/category_page/logo.dart';
+import 'package:portfolio/category_page/post_list.dart';
 import 'package:portfolio/main_page/hamberger_menu.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _CategoryPageState extends State<CategoryPage> {
       height: double.infinity,
       child: data != null
           ? Opacity(
-              opacity: 0.6,
+              opacity: 0.8,
               child: Image.network(
                 data!["thumbnail"],
                 fit: BoxFit.cover,
@@ -73,15 +74,7 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
           ),
         ),
-        AnimatedContainer(
-          curve: Curves.decelerate,
-          duration: Duration(seconds: 1),
-          height: double.infinity,
-          width: postList.isNotEmpty
-              ? MediaQuery.of(context).size.width * (3 / 4)
-              : 0,
-          color: Colors.black.withOpacity(0.3),
-        ),
+        PostList(postList, params: widget.params),
       ],
     );
   }
@@ -90,7 +83,7 @@ class _CategoryPageState extends State<CategoryPage> {
     Container(
       height: 75,
       decoration: BoxDecoration(
-        color: fixColorGreen.withOpacity(0.6),
+        color: fixColorGreen.withOpacity(0.8),
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(15)),
       ),
     ),

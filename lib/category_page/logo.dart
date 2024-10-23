@@ -34,35 +34,38 @@ class _CateLogoState extends State<CateLogo> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          widget.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: "pixel",
-            fontWeight: FontWeight.bold,
-            fontSize: 50,
-            height: 1.1,
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            widget.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: "pixel",
+              fontWeight: FontWeight.bold,
+              fontSize: 50,
+              height: 1.1,
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        Text(
-          widget.description.replaceAll("\\n", " "),
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: "pixel",
-            fontSize: 15,
+          const SizedBox(height: 20),
+          Text(
+            widget.description.replaceAll("\\n", " "),
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: "pixel",
+              fontSize: 15,
+            ),
           ),
-        ),
-        AnimatedContainer(
-          duration: animationDelay,
-          curve: Curves.easeInOut,
-          height: up ? 10 : 0,
-        ),
-      ],
+          AnimatedContainer(
+            duration: animationDelay,
+            curve: Curves.easeInOut,
+            height: up ? 10 : 0,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -77,9 +77,8 @@ class _RecentPostListState extends State<RecentPostList> {
                 child: Text(
                   parsedTitle(data["title"]),
                   style: const TextStyle(
-                    fontFamily: "leeseoyoon",
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: "noonnuGodic",
+                    fontSize: 13,
                   ),
                 ),
               ),

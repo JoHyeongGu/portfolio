@@ -10,8 +10,8 @@ const String corsUrl = "https://corsproxy.io/?";
 
 Widget text(String txt) {
   TextStyle style = const TextStyle(
-    fontSize: 18,
-    fontFamily: "magicpen",
+    fontSize: 13,
+    fontFamily: "noonnuGodic",
   );
   List<TextSpan> spanList = [];
   for (MapEntry word in txt.split("<b>").asMap().entries) {
@@ -68,8 +68,8 @@ Widget image(String txt) {
 
 Widget t1(String txt) {
   TextStyle style = const TextStyle(
-    fontSize: 35,
-    fontFamily: "magicpen",
+    fontSize: 30,
+    fontFamily: "noonnuGodic",
   );
   return Padding(
     padding: const EdgeInsets.only(top: 20),
@@ -86,8 +86,8 @@ Widget t1(String txt) {
 
 Widget t2(String txt) {
   TextStyle style = const TextStyle(
-    fontSize: 25,
-    fontFamily: "magicpen",
+    fontSize: 20,
+    fontFamily: "noonnuGodic",
   );
   return Padding(
     padding: const EdgeInsets.only(top: 10, bottom: 5),
@@ -133,7 +133,7 @@ Widget link(String txt) {
     return {
       "title": title,
       "description": description,
-      "img": img != null ? "https://corsproxy.io/?$img" : null,
+      "img": img != null ? "$corsUrl$img" : null,
     };
   }
 
@@ -255,7 +255,7 @@ class _SummeryTableState extends State<SummeryTable> {
       child: Text(
         part.split(">")[1].split("<")[0],
         style: TextStyle(
-          fontSize: big ? 15 : 13,
+          fontSize: 13,
           color: Colors.white,
         ),
       ),
