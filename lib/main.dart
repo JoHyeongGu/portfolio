@@ -21,7 +21,7 @@ class _MainWidgetState extends State<MainWidget> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: MyColor.primary),
       ),
-      home: Scaffold(backgroundColor: MyColor.white, body: MainPage()),
+      home: Scaffold(backgroundColor: MyColor.background, body: MainPage()),
     );
   }
 }

@@ -10,17 +10,38 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  late ScrollController scrollController;
   late PageController pageController;
+  bool ignore = false;
+
+  initController() {
+    pageController = PageController();
+    scrollController = ScrollController(initialScrollOffset: 10);
+    pageController.addListener(
+      () => setState(() {
+        ignore = pageController.page! >= 1.0;
+      }),
+    );
+    scrollController.addListener(
+      () => setState(() {
+        if (!ignore) {
+          scrollController.jumpTo(10);
+        }
+        ignore = scrollController.offset >= 5;
+      }),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController();
+    initController();
   }
 
   @override
   void dispose() {
     pageController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -32,11 +53,22 @@ class _MainPageState extends State<MainPage> {
         colorScheme: ColorScheme.fromSeed(seedColor: MyColor.primary),
       ),
       home: Scaffold(
-        backgroundColor: MyColor.white,
-        body: PageView(
-          controller: pageController,
-          scrollDirection: Axis.vertical,
-          children: [TitlePage(pageController), MenuPage()],
+        backgroundColor: MyColor.background,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              controller: scrollController,
+              child: Column(children: [AboutPage()]),
+            ),
+            IgnorePointer(
+              ignoring: ignore,
+              child: PageView(
+                controller: pageController,
+                scrollDirection: Axis.vertical,
+                children: [TitlePage(pageController), Container()],
+              ),
+            ),
+          ],
         ),
       ),
     );

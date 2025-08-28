@@ -9,15 +9,17 @@ class BasicText extends StatelessWidget {
   final FontWeight weight;
   final bool italic;
   final TextDecoration? line;
+  final Shadow? shadow;
   const BasicText(
     this.txt, {
     super.key,
     this.family = "paperlogy",
-    this.size = 12,
+    this.size = 16,
     this.color = MyColor.black,
     this.weight = FontWeight.normal,
     this.italic = false,
     this.line,
+    this.shadow,
   });
 
   @override
@@ -31,6 +33,7 @@ class BasicText extends StatelessWidget {
         fontSize: size,
         fontStyle: italic ? FontStyle.italic : FontStyle.normal,
         decoration: line,
+        shadows: shadow != null ? [shadow!] : null,
       ),
     );
   }

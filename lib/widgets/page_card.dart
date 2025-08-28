@@ -13,10 +13,10 @@ class PageCard extends StatefulWidget {
   final double shadow;
   const PageCard({
     super.key,
-    this.background = MyColor.white,
+    this.background = MyColor.background,
     this.width = double.infinity,
     this.height = double.infinity,
-    this.shadow = 0.2,
+    this.shadow = 0.1,
     this.child,
     this.inner,
     this.margin,
@@ -34,7 +34,7 @@ class _PageCardState extends State<PageCard> {
     return Container(
       width: widget.width,
       height: widget.height,
-      margin: widget.margin,
+      margin: widget.margin ?? EdgeInsets.only(bottom: 20),
       padding: widget.padding,
       decoration: BoxDecoration(
         color: widget.background,

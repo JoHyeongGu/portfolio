@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mailto/mailto.dart';
+import 'package:portfolio/tool/functions.dart';
 import 'package:portfolio/tool/tool.dart';
 import 'package:portfolio/widgets/widgets.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class TitlePage extends StatefulWidget {
   final PageController controller;
@@ -29,6 +28,7 @@ class _TitlePageState extends State<TitlePage> {
     double size = 30 + ((MediaQuery.of(context).size.width) / 70);
     if (size < 30) size = 30;
     return PageCard(
+      margin: EdgeInsets.zero,
       background: MyColor.primary,
       shadow: 0.5,
       child: Center(
@@ -36,7 +36,7 @@ class _TitlePageState extends State<TitlePage> {
           "JO'NDEA",
           size: size,
           weight: FontWeight.bold,
-          color: MyColor.white,
+          color: MyColor.background,
         ),
       ),
     );
@@ -51,33 +51,11 @@ class _TitlePageState extends State<TitlePage> {
             spacing: 3,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              contact(
-                "github_logo.png",
-                "JoHyengGu",
-                onClick: () async =>
-                    await launchUrlString("https://github.com/JoHyeongGu"),
-              ),
+              contact("github_logo.png", "JoHyeongGu", onClick: gotoGithub),
               contact(
                 "gmail_logo.png",
                 "whgudrn123@gmail.com",
-                onClick: () async {
-                  final email = "whgudrn123@gmail.com";
-                  Clipboard.setData(ClipboardData(text: email));
-                  final url = Mailto(to: [email]);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: MyColor.black.withValues(alpha: 0.7),
-                      content: BasicText(
-                        "이메일 주소가 복사되었습니다!",
-                        color: Colors.white,
-                        weight: FontWeight.w500,
-                        size: 14,
-                      ),
-                    ),
-                  );
-                  await launchUrlString("$url");
-                },
-                // "mailto:whgudrn123@gmail.com",
+                onClick: () => gotoGmail(context),
               ),
             ],
           ),
@@ -114,6 +92,7 @@ class _TitlePageState extends State<TitlePage> {
           Image.asset("assets/images/$logo", height: 17),
           BasicText(
             txt,
+            size: 12,
             weight: FontWeight.w900,
             line: TextDecoration.underline,
           ),
